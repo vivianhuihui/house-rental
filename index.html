@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>學租圈｜大學生租屋資訊交流平台</title>
+<style>
+:root{
+  /* ===== 色票（以附圖為主）===== */
+  --peach:#F4BAA3; --beige:#F4F0E2; --sky:#A6C8E2; --palette-blue:#619DC6;
+  /* ===== 13 個色彩角色（Design System）===== */
+  --brand:#3A6D93;          /* 品牌／主要操作 */
+  --brand-hover:#2F5C7E;    /* 滑鼠移入 */
+  --brand-pressed:#244A66;  /* 按下 */
+  --focus:#4F87B0;          /* 鍵盤焦點 */
+  --error:#B23A2E;          /* 錯誤 */
+  --success:#2E6F55;        /* 成功 */
+  --brand-tint:#E3EEF7;     /* 品牌淡底 */
+  --text:#1F2E3D;           /* 主要文字 */
+  --text-2:#52606E;         /* 輔助文字 */
+  --surface:#FFFFFF;        /* 表面 */
+  --bg:#F4F0E2;             /* 背景 */
+  --border:#7D8995;         /* 欄位邊界 */
+  --disabled:#E4E1D6;       /* 停用底色 */
+  /* ===== 元件用別名（連到上方角色）===== */
+  --paper:var(--bg); --card:var(--surface); --ink:var(--text); --ink2:var(--text-2); --muted:var(--text-2);
+  --line:#E3DDCC; --accent:var(--brand); --peach-soft:#FBE6DD; --accent-soft:var(--peach-soft);
+  --leaf:var(--success); --leaf-soft:#E2F0E9; --gold:#C26A48; --warn:var(--error); --blue:var(--brand); --blue-soft:var(--brand-tint);
+  --r:14px; --shadow:0 1px 2px rgba(31,46,61,.06),0 6px 18px rgba(31,46,61,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:hidden;max-width:100%}
+body{font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei","Heiti TC",system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+h1,h2,h3{line-height:1.3;letter-spacing:.01em}
+.wrap{max-width:1120px;margin:0 auto;padding:0 18px}
+.muted{color:var(--muted)} .small{font-size:13px} .tiny{font-size:12px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.between{justify-content:space-between}
+.stack>*+*{margin-top:12px}
+.hide{display:none!important}
+p,li,td,h1,h2,h3,span,div{overflow-wrap:anywhere}
+
+/* header */
+header.top{position:sticky;top:0;z-index:40;background:rgba(244,240,226,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;gap:14px;height:62px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:19px;text-decoration:none;white-space:nowrap}
+.logo i{width:30px;height:30px;border-radius:9px;background:var(--brand);display:grid;place-items:center;color:#fff;font-style:normal;font-size:15px}
+nav.main{display:flex;gap:2px;margin-left:8px;flex:1;min-width:0}
+nav.main a{padding:7px 11px;border-radius:999px;text-decoration:none;color:var(--ink2);font-size:14px;white-space:nowrap}
+nav.main a.on{background:var(--brand);color:#fff}
+nav.main a:hover{background:var(--brand-tint);color:var(--brand-pressed)}
+nav.main a.on:hover{background:var(--brand-hover);color:#fff}
+.userbox{display:flex;gap:8px;align-items:center;margin-left:auto}
+.menu-btn{display:none;width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:18px}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px;flex-shrink:0}
+.dot{position:relative}
+.dot[data-n]:after{content:attr(data-n);position:absolute;top:-4px;right:-6px;background:var(--error);color:#fff;font-size:10px;border-radius:999px;padding:0 5px;line-height:16px}
+@media (max-width:900px){
+  nav.main{display:none;position:fixed;top:62px;left:0;right:0;flex-direction:column;background:var(--paper);padding:10px 14px 16px;border-bottom:1px solid var(--line);margin:0;box-shadow:var(--shadow)}
+  nav.main.open{display:flex}
+  nav.main a{padding:12px 14px;border-radius:10px;font-size:15px}
+  .menu-btn{display:block}
+  .userbox .uname{display:none}
+}
+
+/* buttons & inputs */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 16px;border-radius:999px;font-weight:600;font-size:14px;border:1px solid transparent;transition:.15s;text-decoration:none;white-space:nowrap}
+.btn.pri{background:var(--brand);color:#fff}
+.btn.pri:hover{background:var(--brand-hover)}
+.btn.pri:active{background:var(--brand-pressed)}
+.btn.dark{background:var(--brand-pressed);color:#fff}
+.btn.dark:hover{background:var(--brand-hover)}
+.btn.ghost{border-color:var(--border);background:var(--surface);color:var(--brand-pressed)}
+.btn.ghost:hover{background:var(--brand-tint)}
+.btn.ghost:active{background:#CFE0EE}
+.btn:focus-visible,a:focus-visible,button:focus-visible,input[type=checkbox]:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.btn.leaf{background:var(--leaf);color:#fff}
+.btn.warn{background:var(--warn);color:#fff}
+.btn.sm{padding:6px 12px;font-size:13px}
+.btn:disabled{background:var(--disabled);color:var(--text-2);border-color:var(--disabled);cursor:not-allowed}
+.btn.block{width:100%}
+label.f{display:block;font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:5px}
+label.f em{color:var(--error);font-style:normal}
+.in,select.in,textarea.in{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:#fff;outline:none;min-width:0}
+.in:focus{border-color:var(--focus);box-shadow:0 0 0 3px rgba(79,135,176,.25)}
+.in:disabled{background:var(--disabled);color:var(--text-2)}
+textarea.in{resize:vertical;min-height:90px}
+.err{color:var(--error);font-size:12.5px;margin-top:4px}
+.in.bad{border-color:var(--error);background:#FDF1EE}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:640px){.grid2,.grid3{grid-template-columns:1fr}}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:14px;cursor:pointer}
+.chk input{margin-top:4px;accent-color:var(--brand);width:16px;height:16px;flex-shrink:0}
+
+/* cards & chips */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);min-width:0}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:12.5px;background:#ECE6D4;color:var(--text);white-space:nowrap}
+.chip.leaf{background:var(--leaf-soft);color:var(--leaf)}
+.chip.acc{background:var(--peach-soft);color:var(--error)}
+.chip.blue{background:var(--blue-soft);color:var(--blue)}
+.chip.gray{background:var(--disabled);color:var(--text-2)}
+button.chip{border:1px solid transparent;cursor:pointer}
+button.chip.on{background:var(--brand);color:#fff}
+.tag-wrap{display:flex;flex-wrap:wrap;gap:6px}
+.badge{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:6px}
+.b-pending{background:var(--peach-soft);color:#8C4228}
+.b-ok{background:var(--leaf-soft);color:var(--leaf)}
+.b-bad{background:#F9E1DC;color:var(--error)}
+.b-gray{background:var(--disabled);color:var(--text-2)}
+.b-blue{background:var(--blue-soft);color:var(--blue)}
+
+/* page */
+main{min-height:calc(100vh - 62px);padding-bottom:60px}
+.page-head{padding:28px 0 18px}
+.page-head h1{font-size:26px}
+.page-head p{color:var(--ink2);margin-top:4px}
+.section-t{font-size:18px;font-weight:800;margin:26px 0 12px;display:flex;align-items:center;gap:8px}
+
+/* hero */
+.hero{background:var(--sky);color:var(--text);border-radius:0 0 28px 28px;padding:34px 0 30px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;background:var(--peach)}
+.hero:after{content:"";position:absolute;right:120px;bottom:-90px;width:180px;height:180px;border-radius:50%;border:26px solid var(--palette-blue)}
+.hero .wrap{position:relative;z-index:1}
+.hero h1{font-size:32px;max-width:560px}
+.hero h1 b{color:var(--brand-pressed);background:linear-gradient(transparent 62%,var(--peach) 62%)}
+.hero p{color:var(--text);margin-top:8px;max-width:520px}
+.searchbar{margin-top:20px;background:var(--card);color:var(--ink);border-radius:18px;padding:14px;display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr auto;gap:10px;box-shadow:0 10px 30px rgba(36,74,102,.18)}
+@media (max-width:860px){.searchbar{grid-template-columns:1fr 1fr}.searchbar .q{grid-column:1/-1}.searchbar .btn{grid-column:1/-1}}
+@media (max-width:640px){.hero h1{font-size:25px}.hero:after{display:none}}
+.tagfilter{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}
+.tagfilter button{padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.6);color:var(--text);font-size:13px;border:1px solid rgba(255,255,255,.9)}
+.tagfilter button:hover{background:#fff}
+.tagfilter button.on{background:var(--brand-pressed);color:#fff;border-color:var(--brand-pressed)}
+
+.banner{margin:18px 0 0;padding:14px 16px;border-radius:var(--r);background:var(--peach-soft);display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin:22px 0 12px;gap:10px;flex-wrap:wrap}
+.seg{display:inline-flex;background:#E6DFCB;border-radius:999px;padding:3px}
+.seg button{padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;color:var(--ink2)}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+
+/* listing cards (photo wall) */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+@media (max-width:560px){.cards{grid-template-columns:1fr}}
+.lcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;cursor:pointer;transition:.18s;min-width:0}
+.lcard:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(36,74,102,.14)}
+.photo{position:relative;aspect-ratio:4/3;overflow:hidden;display:flex;align-items:flex-end;justify-content:center}
+.photo svg{width:78%;height:auto;margin-bottom:-2px}
+.photo .ptag{position:absolute;left:10px;top:10px;background:rgba(255,255,255,.92);padding:2px 9px;border-radius:999px;font-size:12px;font-weight:700}
+.fav{position:absolute;right:10px;top:10px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.95);display:grid;place-items:center;font-size:17px;color:var(--error)}
+.lcard .body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.price{font-size:20px;font-weight:800}
+.price small{font-size:12.5px;font-weight:500;color:var(--muted)}
+.match{font-size:12px;color:var(--leaf);font-weight:700}
+
+/* map */
+.map{position:relative;height:430px;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);
+ background:
+ linear-gradient(90deg,transparent 48%,#fff 48%,#fff 50%,transparent 50%) 0 0/100% 100%,
+ linear-gradient(0deg,transparent 58%,#fff 58%,#fff 60%,transparent 60%) 0 0/100% 100%,
+ linear-gradient(35deg,transparent 64%,#fff 64%,#fff 65.5%,transparent 65.5%) 0 0/100% 100%,
+ repeating-linear-gradient(0deg,#E6E0CD 0 1px,transparent 1px 38px),
+ repeating-linear-gradient(90deg,#E6E0CD 0 1px,transparent 1px 38px),var(--beige)}
+.zone{position:absolute;border-radius:50%;background:rgba(166,200,226,.35);border:2px dashed var(--palette-blue);transform:translate(-50%,-50%)}
+.zone span{position:absolute;left:50%;top:-12px;transform:translateX(-50%);font-size:12px;font-weight:700;color:var(--brand-pressed);background:var(--beige);padding:0 6px;border-radius:6px;white-space:nowrap}
+.pin{position:absolute;transform:translate(-50%,-100%);background:var(--brand-pressed);color:#fff;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap;box-shadow:0 3px 8px rgba(0,0,0,.2)}
+.pin:after{content:"";position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--brand-pressed);border-bottom:0}
+.pin:hover{background:var(--brand);z-index:3}
+.pin:hover:after{border-top-color:var(--brand)}
+.school{position:absolute;transform:translate(-50%,-50%);font-size:12px;font-weight:800;background:var(--peach);color:var(--text);padding:4px 10px;border-radius:8px}
+@media (max-width:560px){.map{height:340px}.pin{font-size:11px;padding:2px 7px}}
+
+/* about */
+.about{margin-top:44px;display:grid;grid-template-columns:1.1fr 1fr;gap:18px}
+@media (max-width:760px){.about{grid-template-columns:1fr}}
+.about .card h3{margin-bottom:8px}
+.feature{display:flex;gap:12px;align-items:flex-start}
+.feature b.n{width:30px;height:30px;border-radius:9px;background:var(--brand-tint);color:var(--brand);display:grid;place-items:center;flex-shrink:0}
+footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-size:13px}
+
+/* detail */
+.detail{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;margin-top:20px}
+@media (max-width:820px){.detail{grid-template-columns:1fr}}
+.detail .photo{border-radius:var(--r);aspect-ratio:16/10}
+.kv{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.kv div{background:var(--bg);border-radius:10px;padding:10px 12px}
+.kv span{display:block;font-size:12px;color:var(--muted)}
+.kv b{font-size:15px}
+
+/* tabs */
+.tabs{display:flex;gap:6px;border-bottom:2px solid var(--line);margin-bottom:16px;flex-wrap:wrap}
+.tabs button{padding:10px 16px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px}
+.tabs button.on{color:var(--brand-pressed);border-color:var(--brand)}
+
+/* checklist */
+.cl-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.cl-item+.cl-item{margin-top:8px}
+.cl-item.done{background:#F1F7F3;border-color:#C9E0D3}
+.cl-item.done .nm{text-decoration:line-through;color:var(--muted)}
+.cl-item .nm{flex:1;min-width:0}
+.cl-item.pri{border-left:4px solid var(--peach)}
+.x{width:28px;height:28px;border-radius:8px;color:var(--muted);flex-shrink:0}
+.x:hover{background:var(--peach-soft);color:var(--error)}
+.progress{height:8px;background:var(--disabled);border-radius:999px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--leaf);border-radius:999px;transition:.3s}
+.hint{padding:12px 14px;border-radius:12px;background:var(--blue-soft);color:var(--blue);font-size:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.know{padding:14px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.know+.know{margin-top:10px}
+.sticky-act{position:sticky;bottom:12px;margin-top:18px;background:var(--brand-pressed);color:#fff;border-radius:16px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;box-shadow:0 10px 26px rgba(0,0,0,.2);z-index:5}
+
+.sticky-act .btn.pri{background:var(--peach);color:var(--text)}
+.sticky-act .btn.pri:hover{background:#F8D3C3}
+/* record form */
+.fsec{margin-top:16px}
+.fsec>h3{font-size:16px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.fsec>h3 .num{width:24px;height:24px;border-radius:7px;background:var(--brand);color:#fff;font-size:12px;display:grid;place-items:center}
+.stars{display:inline-flex;gap:2px}
+.stars button{font-size:22px;line-height:1;color:#D3CCB8;padding:2px}
+.stars button.on{color:var(--gold)}
+.rate-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 18px}
+@media (max-width:640px){.rate-grid{grid-template-columns:1fr}}
+.rate-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.tri{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;flex-shrink:0}
+.tri button{padding:5px 11px;font-size:13px;color:var(--ink2)}
+.tri button.ok{background:var(--success);color:#fff}
+.tri button.bad{background:var(--error);color:#fff}
+.check-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:10px}
+.thumbs div{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:#eee}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.thumbs button{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:12px}
+.upload{display:flex;align-items:center;justify-content:center;gap:8px;border:2px dashed var(--line);border-radius:12px;padding:18px;color:var(--ink2);cursor:pointer;background:#fff;text-align:center}
+.save-bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-top:20px}
+@media (max-width:560px){.save-bar .btn{flex:1 1 100%}}
+
+/* records */
+.rec{display:flex;gap:14px;align-items:center}
+.rec .mini{width:76px;height:76px;border-radius:12px;flex-shrink:0;overflow:hidden;background:var(--sky);display:grid;place-items:center;font-size:26px}
+.rec .mini img{width:100%;height:100%;object-fit:cover}
+.rec .info{flex:1;min-width:0}
+.rec.sel{outline:2px solid var(--brand);outline-offset:-1px}
+.rec-list>*+*{margin-top:10px}
+@media (max-width:560px){.rec{flex-wrap:wrap}.rec .acts{width:100%}}
+
+/* compare */
+.cmp-head{display:grid;gap:10px}
+.cmp-card{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;position:relative;min-width:0}
+.cmp-card.final{border:2px solid var(--success);background:#F1F7F3}
+.cmp-card .no{position:absolute;top:-10px;left:12px;background:var(--brand);color:#fff;font-size:11px;font-weight:700;padding:1px 8px;border-radius:999px}
+.dim{padding:12px 0;border-bottom:1px solid var(--line)}
+.dim h4{font-size:14px;margin-bottom:8px;color:var(--ink2)}
+.dim-vals{display:grid;gap:8px}
+.dv{background:var(--bg);border-radius:10px;padding:8px 10px;font-size:13px;min-width:0}
+.dv.best{background:var(--leaf-soft);outline:2px solid var(--leaf)}
+.dv .bar{height:6px;background:var(--disabled);border-radius:999px;margin-top:6px;overflow:hidden}
+.dv .bar i{display:block;height:100%;background:var(--palette-blue)}
+.dv.best .bar i{background:var(--leaf)}
+.dv .nm{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cols-1{grid-template-columns:1fr}.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:760px){.cols-3,.cols-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:420px){.cols-2,.cols-3,.cols-4{grid-template-columns:minmax(0,1fr)}}
+
+/* forum */
+.post{padding:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--card);cursor:pointer;box-shadow:var(--shadow)}
+.post+.post{margin-top:10px}
+.post h3{font-size:16px;margin:6px 0 4px}
+.post p{color:var(--ink2);font-size:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cmt{padding:12px 0;border-bottom:1px dashed var(--line)}
+.cmt.pending{opacity:.6}
+.layout-side{display:grid;grid-template-columns:1fr 300px;gap:20px}
+@media (max-width:880px){.layout-side{grid-template-columns:1fr}}
+.preview-box{border:2px dashed var(--line);border-radius:var(--r);padding:16px;background:#fff}
+
+/* modal & toast */
+.modal-bg{position:fixed;inset:0;background:rgba(31,46,61,.5);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--card);border-radius:18px;max-width:520px;width:100%;max-height:88vh;overflow:auto;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.modal h3{font-size:19px;margin-bottom:10px}
+.modal .acts{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:18px}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;font-size:14px;z-index:200;opacity:0;transition:.25s;pointer-events:none;max-width:calc(100vw - 32px);text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* auth */
+.auth{max-width:440px;margin:36px auto 0}
+.auth .card{padding:26px}
+.steps{display:flex;gap:6px;margin-bottom:16px}
+.steps i{flex:1;height:5px;border-radius:999px;background:var(--disabled)}
+.steps i.on{background:var(--brand)}
+.demo{background:var(--peach-soft);border:1px dashed var(--peach);border-radius:12px;padding:10px 12px;font-size:13px;margin-top:14px}
+
+/* admin */
+body.admin-mode{background:#EEF3F8}
+.adm{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 62px)}
+.adm aside{background:var(--brand-pressed);color:#E3EEF7;padding:18px 12px}
+.adm aside a{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:10px;text-decoration:none;font-size:14px}
+.adm aside a.on,.adm aside a:hover{background:rgba(255,255,255,.16);color:#fff}
+.adm aside .cnt{background:var(--peach);color:var(--text);color:#fff;font-size:11px;padding:0 7px;border-radius:999px}
+.adm .content{padding:24px;min-width:0}
+@media (max-width:820px){.adm{grid-template-columns:1fr}.adm aside{display:flex;flex-wrap:wrap;gap:4px;padding:10px}.adm aside a{padding:7px 11px;font-size:13px}.adm aside .ttl{display:none}.adm .content{padding:16px}}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.stat{background:#fff;border-radius:14px;padding:16px;border:1px solid #DFE3EA}
+.stat b{display:block;font-size:28px}
+.stat span{font-size:13px;color:var(--muted)}
+.tbl{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;table-layout:fixed}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;border-bottom:1px solid #EDEFF3;font-size:14px;vertical-align:middle}
+.tbl th{background:#F6F7FA;font-size:12.5px;color:var(--muted);font-weight:700}
+.tbl tr.click{cursor:pointer}
+.tbl tr.click:hover td{background:#FAFBFD}
+@media (max-width:700px){
+  .tbl thead{display:none}
+  .tbl,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}
+  .tbl tr{border-bottom:1px solid #E3E6EC;padding:8px 0}
+  .tbl td{border:none;padding:4px 12px}
+  .tbl td[data-l]:before{content:attr(data-l)"：";color:var(--muted);font-size:12px}
+}
+.adm .card{box-shadow:none;border-color:#DFE3EA;background:#fff}
+.log{font-size:13px;padding:8px 0;border-bottom:1px dashed #E3E6EC}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12.5px;color:var(--ink2);margin-top:6px}
+.flow span{background:#F1F3F7;border-radius:6px;padding:2px 8px}
+
+@media print{
+  header.top,footer,.no-print,#toast{display:none!important}
+  body{background:#fff}
+  .card{box-shadow:none}
+  main{padding:0}
+}
+</style>
+</head>
+<body>
+<header class="top no-print" id="hdr"></header>
+<main id="app"></main>
+<div id="toast"></div>
+<div id="modal-root"></div>
+
+<script>
+/* =========================================================
+   學租圈｜大學生租屋資訊交流平台（原型）
+   - 純前端：資料存在瀏覽器 localStorage（可按頁尾「重設示範資料」）
+   - 示範帳號：學生 demo@nthu.edu.tw / 123456　後台 admin / admin123
+   ========================================================= */
+const KEY='xuezu_demo_v1';
+const ZONES=['光復建功生活圈','交大大學路','南大校區','金山關新'];
+const TYPES=['獨立套房','分租套房','雅房','整層住家'];
+const TAGS=['近校區','含網路','有電梯','可開伙','可養寵','有陽台','垃圾代收','機車位','含水電','管理員'];
+const DIMS=[['light','採光'],['sound','隔音'],['space','空間感'],['landlord','房東態度'],['damp','乾爽程度'],['traffic','交通便利'],['water','水費划算'],['power','電費划算']];
+const PROS=['採光好','安靜','近學校','房東友善','設備新','空間大','租金便宜','生活機能好'];
+const CONS=['潮濕','吵雜','隔間薄','離學校遠','電費貴','無電梯','有異味','收訊差'];
+const BAD_WORDS=['詐騙','白癡','加賴','私訊賺錢','垃圾房東去死'];
+const GENERIC=[['水壓與熱水是否正常','設備'],['網路速度（現場測速）','設備'],['有無異味、霉味','環境'],['牆面有無壁癌、漏水痕跡','環境'],['白天採光與通風','環境'],['關窗後的隔音','環境'],['手機訊號','設備'],['門窗鎖是否牢固','安全'],['插座數量與位置','設備'],['冷氣運作與清潔','設備'],['滅火器、逃生動線','安全']];
+const KNOW=[
+ ['合約','押金上限','依租賃住宅市場發展及管理條例，押金不得超過 2 個月租金。','確認押金不超過 2 個月租金'],
+ ['合約','確認出租人身分','簽約前請對方出示身分證與房屋權狀（或轉租同意書），避免遇到二房東詐騙。','核對房東身分與權狀'],
+ ['合約','可否設籍、報稅','部分房東不讓房客設籍或申報租金，會影響租金補貼申請。','詢問可否設籍與報稅'],
+ ['費用','電費怎麼算','台電計費或每度固定價（常見 5～6 元/度），夏季差異很大。','確認電費每度價格'],
+ ['費用','管理費與網路費','問清楚租金是否含管理費、網路、水費，算出每月總支出。','確認租金包含哪些費用'],
+ ['安全','門鎖是否換新','換房客時應更換門鎖或密碼，可在合約上註記。','確認門鎖已更換'],
+ ['安全','逃生與消防','確認有住宅用火災警報器、滅火器，頂加與違建隔間風險較高。','確認有火災警報器'],
+ ['生活','垃圾怎麼丟','新竹多數地區需追垃圾車，確認是否有垃圾代收或子母車。','確認垃圾處理方式'],
+ ['生活','訪客與噪音規定','有些房子限制訪客過夜或晚間噪音，先問清楚避免糾紛。','詢問訪客與作息規定'],
+];
+const PALETTE=[['#F4BAA3','#EBA58A'],['#A6C8E2','#8DB7D7'],['#F4F0E2','#E3DCC4'],['#C7DCEC','#619DC6'],['#F8D3C3','#F4BAA3'],['#DCE9F4','#A6C8E2'],['#EFE8D2','#F4BAA3'],['#B9D4E8','#7FB0D2']];
+
+/* ---------- seed ---------- */
+function seed(){
+  const t=(d)=>new Date(Date.now()-d*864e5).toISOString();
+  return {
+    listings:[
+      {id:'L1',title:'光復路一段・清大正門旁 獨立套房',zone:'光復建功生活圈',road:'光復路一段',price:7800,type:'獨立套房',size:6,floor:'4F / 7F',tags:['近校區','含網路','有電梯','可開伙'],rating:4.4,reviews:12,desc:'步行到清大正門 5 分鐘，對外窗採光好。學長姐回報夏天電費偏高，建議確認冷氣年份。',x:52,y:42},
+      {id:'L2',title:'建功路 學生雅房（含水電）',zone:'光復建功生活圈',road:'建功路',price:5200,type:'雅房',size:4,floor:'3F / 5F',tags:['近校區','含水電','垃圾代收'],rating:4.0,reviews:8,desc:'共用衛浴（3 人一間），含水電與網路，適合預算有限的同學。',x:44,y:50},
+      {id:'L3',title:'高翠路 兩房整層・適合合租',zone:'南大校區',road:'高翠路',price:16000,type:'整層住家',size:18,floor:'2F / 4F',tags:['可養寵','有陽台','可開伙','機車位'],rating:4.2,reviews:5,desc:'兩房一廳，兩人合租每人 8,000。可養貓，客廳大有陽台可曬衣。',x:30,y:72},
+      {id:'L4',title:'寶山路 電梯套房・垃圾代收',zone:'南大校區',road:'寶山路',price:9200,type:'獨立套房',size:7,floor:'6F / 10F',tags:['有電梯','垃圾代收','管理員','含網路'],rating:4.6,reviews:15,desc:'有管理員代收包裹，騎車到清大約 8 分鐘。',x:40,y:80},
+      {id:'L5',title:'大學路 陽明交大旁 新裝潢套房',zone:'交大大學路',road:'大學路',price:8500,type:'獨立套房',size:6.5,floor:'5F / 7F',tags:['近校區','有電梯','含網路'],rating:4.3,reviews:10,desc:'走路到交大光復校區 6 分鐘，去年重新裝潢。',x:74,y:24},
+      {id:'L6',title:'食品路 分租套房・生活機能佳',zone:'光復建功生活圈',road:'食品路',price:6300,type:'分租套房',size:5,floor:'2F / 4F',tags:['可開伙','機車位','含水電'],rating:3.8,reviews:6,desc:'附近有全聯與小吃，機車位免費。一樓有點吵。',x:60,y:56},
+      {id:'L7',title:'金城一路 新大樓套房・管理員',zone:'金山關新',road:'金城一路',price:10500,type:'獨立套房',size:8,floor:'9F / 14F',tags:['有電梯','管理員','垃圾代收','有陽台'],rating:4.5,reviews:7,desc:'新大樓，安全性高，離竹科近，適合研究生。',x:86,y:62},
+      {id:'L8',title:'南大路 平價雅房・近南大校區',zone:'南大校區',road:'南大路',price:4600,type:'雅房',size:3.5,floor:'4F / 4F',tags:['近校區','含水電'],rating:3.6,reviews:9,desc:'頂樓，夏天較熱，但租金是附近最低的之一。',x:22,y:62},
+    ],
+    users:[
+      {id:'U1',name:'趙同學',email:'demo@nthu.edu.tw',pw:'123456',phone:'0912-345-678',school:'國立清華大學',schoolEmail:'demo@gapp.nthu.edu.tw',verify:'verified',status:'active',created:t(40),
+       needs:{budget:9000,zones:['光復建功生活圈'],type:'獨立套房',tags:['含網路','可開伙']},favs:['L1','L5'],notices:[{t:t(2),msg:'歡迎加入學租圈！你的學生身分已通過驗證。',read:false}],violations:[],logs:[]},
+      {id:'U2',name:'王小明',email:'ming@nycu.edu.tw',pw:'123456',phone:'0922-111-222',school:'國立陽明交通大學',schoolEmail:'ming@nycu.edu.tw',verify:'pending',status:'active',created:t(3),needs:{budget:0,zones:[],type:'',tags:[]},favs:[],notices:[],violations:[],logs:[]},
+      {id:'U3',name:'林小安',email:'an@nthu.edu.tw',pw:'123456',phone:'0933-555-666',school:'國立清華大學',schoolEmail:'an@gapp.nthu.edu.tw',verify:'verified',status:'active',created:t(60),needs:{budget:0,zones:[],type:'',tags:[]},favs:[],notices:[],
+       violations:[{t:t(5),type:'留言違規',desc:'於交流版留言含人身攻擊字眼（被 2 位會員檢舉）'},{t:t(1),type:'疑似廣告',desc:'貼文內含外部聯絡方式招攬'}],logs:[]},
+      {id:'U4',name:'陳宥睿',email:'rui@gmail.com',pw:'123456',phone:'0955-000-111',school:'',schoolEmail:'',verify:'none',status:'active',created:t(1),needs:{budget:0,zones:[],type:'',tags:[]},favs:[],notices:[],violations:[],logs:[]},
+    ],
+    posts:[
+      {id:'P1',uid:'U3',author:'林小安',cat:'看屋心得',title:'光復路套房看房紀錄：採光很好但要注意電費',listingId:'L1',body:'上週去看了光復路一段的套房，對外窗很大、早上很亮。房東人很好，但冷氣是 2015 年的，電費一度 5.5 元，夏天可能會破千。建議看房時開冷氣測一下噪音。',status:'published',created:t(6),likes:18,
+       comments:[{id:'C1',uid:'U1',author:'趙同學',body:'謝謝分享！請問網路速度大概多少？',status:'shown',created:t(5)},{id:'C2',uid:'U2',author:'王小明',body:'我住過隔壁棟，隔音其實還可以。',status:'shown',created:t(4)}]},
+      {id:'P2',uid:'U1',author:'趙同學',cat:'租屋心得',title:'住寶山路一年的心得：管理員代收包裹超方便',listingId:'L4',body:'住了一年，最喜歡的是管理員代收包裹跟垃圾代收，不用追垃圾車。缺點是騎車上學要爬坡，下雨天比較麻煩。',status:'published',created:t(12),likes:25,comments:[]},
+      {id:'P3',uid:'U2',author:'王小明',cat:'問題求助',title:'第一次在外租屋，簽約要注意什麼？',listingId:'',body:'下學期要搬出宿舍，第一次自己租房，想問大家簽約有沒有一定要確認的地方？押金一般收幾個月？',status:'published',created:t(3),likes:9,
+       comments:[{id:'C3',uid:'U3',author:'林小安',body:'押金最多兩個月！可以先看平台的「看屋須知」。',status:'shown',created:t(2)},{id:'C4',uid:'U3',author:'林小安',body:'有便宜房源要的話加賴私訊我，私訊賺錢機會也有',status:'pending',created:t(0.2)}]},
+      {id:'P4',uid:'U3',author:'林小安',cat:'生活圈情報',title:'南大校區附近平價小吃整理',listingId:'',body:'整理了南大路、高翠路一帶學生常吃的店，晚餐 100 元有找的選擇很多……',status:'pending',created:t(0.5),likes:0,comments:[]},
+      {id:'P5',uid:'U2',author:'王小明',cat:'看屋心得',title:'食品路分租套房看房：一樓有點吵',listingId:'L6',body:'機車位免費這點很加分，但房間在一樓靠馬路，晚上車聲明顯，淺眠的人要考慮。',status:'pending',created:t(0.3),likes:0,comments:[]},
+    ],
+    tickets:[
+      {id:'T1',account:'ming@nycu.edu.tw',type:'帳號問題',body:'學生證上傳後多久會審核完成？',created:t(1),status:'open',reply:''},
+      {id:'T2',account:'nobody@xx.com',type:'其他',body:'我收藏的房源不見了',created:t(0.4),status:'open',reply:''},
+    ],
+    records:[
+      {id:'R1',owner:'U1',status:'saved',mode:'pick',listingId:'L1',manual:{},date:dstr(-3),time:'14:00',overall:4,impression:'採光很好，房間方正，房東很親切。',ratings:{light:5,sound:3,space:4,landlord:5,damp:4,traffic:5,water:4,power:2},checks:[{name:'水壓',v:'ok'},{name:'網路',v:'ok'},{name:'異味',v:'ok'},{name:'壁癌',v:'ok'}],pros:['採光好','近學校','房東友善'],cons:['電費貴'],prosText:'走路 5 分鐘到校',consText:'冷氣較舊',photos:[],notes:'房東說可以下個月 1 號入住',created:t(3),updated:t(3)},
+      {id:'R2',owner:'U1',status:'saved',mode:'pick',listingId:'L5',manual:{},date:dstr(-2),time:'10:30',overall:4,impression:'裝潢新，但空間比照片小。',ratings:{light:3,sound:4,space:3,landlord:4,damp:5,traffic:4,water:4,power:4},checks:[{name:'水壓',v:'ok'},{name:'網路',v:'ok'},{name:'異味',v:'ok'},{name:'壁癌',v:'ok'}],pros:['設備新','安靜'],cons:['離學校遠'],prosText:'',consText:'離清大要騎車',photos:[],notes:'',created:t(2),updated:t(2)},
+      {id:'R3',owner:'U1',status:'saved',mode:'manual',listingId:'',manual:{name:'仙宮里 頂加套房（朋友介紹）',addr:'新竹市東區',rent:6000},date:dstr(-1),time:'19:00',overall:2,impression:'便宜但頂加夏天很熱，有漏水痕跡。',ratings:{light:4,sound:2,space:4,landlord:3,damp:1,traffic:3,water:5,power:3},checks:[{name:'水壓',v:'bad'},{name:'網路',v:'ok'},{name:'異味',v:'bad'},{name:'壁癌',v:'bad'}],pros:['租金便宜','空間大'],cons:['潮濕','有異味'],prosText:'',consText:'天花板有水漬',photos:[],notes:'',created:t(1),updated:t(1)},
+    ],
+    compare:{U1:[]}, finalPick:{}, checklists:{}, carry:{}, viewed:{U1:['L1','L5','L4']},
+    session:null, admin:false,
+    admins:[{id:'admin',pw:'admin123',email:'admin@xuezu.tw',name:'系統管理員'}],
+    adminLogs:[], postDraft:null
+  };
+}
+function dstr(off){const d=new Date(Date.now()+off*864e5);return d.toISOString().slice(0,10)}
+
+/* ---------- state ---------- */
+let S;
+try{S=JSON.parse(localStorage.getItem(KEY))||seed()}catch(e){S=seed()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('瀏覽器儲存空間已滿，照片可能未保存')}}
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const fmt=iso=>{const d=new Date(iso);return `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`};
+const money=n=>'$'+Number(n||0).toLocaleString();
+const cur=()=>S.users.find(u=>u.id===S.session);
+const owner=()=>S.session||'guest';
+const L=id=>S.listings.find(l=>l.id===id);
+const go=h=>{location.hash=h};
+const starTxt=v=>'★'.repeat(v||0)+'☆'.repeat(5-(v||0));
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600)}
+function modal(html){$('#modal-root').innerHTML=`<div class="modal-bg" data-act="modal-bg"><div class="modal" role="dialog">${html}</div></div>`}
+function closeModal(){$('#modal-root').innerHTML=''}
+let nextModal=null;
+function hasNeeds(u){const n=u&&u.needs;return !!(n&&(n.budget||n.zones.length||n.type||n.tags.length))}
+function needLogin(redirect,msg){
+  modal(`<h3>請先登入會員</h3><p class="muted">${esc(msg||'這個功能需要登入學租圈會員才能使用。')}</p>
+  <div class="acts"><button class="btn ghost" data-act="close">取消</button><a class="btn ghost" href="#/register" data-act="close">註冊會員</a><a class="btn pri" href="#/login?r=${encodeURIComponent(redirect||location.hash.slice(1))}" data-act="close">前往登入</a></div>`)
+}
+function photo(l,extra=''){
+  const i=(parseInt(String(l.id).replace(/\D/g,''))||1)%PALETTE.length;const [a,b]=PALETTE[i];
+  const tall=l.type==='整層住家'||l.tags.includes('有電梯');
+  return `<div class="photo" style="background:linear-gradient(160deg,${a},${b})">
+  <svg viewBox="0 0 200 ${tall?150:120}" aria-hidden="true">
+   ${tall?`<rect x="45" y="10" width="110" height="140" rx="4" fill="#FFFFFF"/>${[0,1,2,3].map(r=>[0,1,2].map(c=>`<rect x="${58+c*32}" y="${22+r*30}" width="20" height="18" rx="2" fill="${(r+c)%3?'#619DC6':'#F4BAA3'}"/>`).join('')).join('')}`
+   :`<path d="M30 60 L100 12 L170 60 Z" fill="${b}" stroke="#FFFFFF" stroke-width="4"/><rect x="40" y="58" width="120" height="62" fill="#FFFFFF"/><rect x="56" y="72" width="28" height="22" rx="2" fill="#F4BAA3"/><rect x="116" y="72" width="28" height="22" rx="2" fill="#619DC6"/><rect x="88" y="88" width="24" height="32" rx="2" fill="${a}"/>`}
+  </svg><span class="ptag">${esc(l.zone)}</span>${extra}</div>`
+}
+
+/* ---------- header ---------- */
+function renderHeader(path){
+  const u=cur();
+  if(path.startsWith('admin')){
+    $('#hdr').innerHTML=`<div class="wrap"><a class="logo" href="#/admin"><i>學</i>學租圈 <span class="chip blue">後台</span></a>
+    <div class="userbox">${S.admin?`<span class="small muted uname">系統管理員</span><button class="btn ghost sm" data-act="admin-logout">登出</button>`:''}<a class="btn ghost sm" href="#/">回前台</a></div></div>`;
+    document.body.classList.add('admin-mode');return
+  }
+  document.body.classList.remove('admin-mode');
+  const unread=u?u.notices.filter(n=>!n.read).length:0;
+  const nav=[['/','找房'],['/guide','看屋須知'],['/records','看房紀錄'],['/compare','比較'],['/forum','交流版'],['/support','客服中心']];
+  const on=p=>('/'+path)===p||(p!=='/'&&('/'+path).startsWith(p))?'on':'';
+  $('#hdr').innerHTML=`<div class="wrap">
+   <a class="logo" href="#/"><i>學</i>學租圈</a>
+   <nav class="main" id="nav">${nav.map(([h,t])=>`<a href="#${h}" class="${on(h)}">${t}</a>`).join('')}</nav>
+   <div class="userbox">
+    ${u?`<a href="#/me" class="row dot" style="text-decoration:none;gap:8px" ${unread?`data-n="${unread}"`:''}><span class="avatar">${esc(u.name[0])}</span><span class="uname small">${esc(u.name)}</span></a>`
+      :`<a class="btn ghost sm" href="#/login">登入</a><a class="btn pri sm" href="#/register">註冊</a>`}
+    <button class="menu-btn" data-act="menu" aria-label="選單">☰</button>
+   </div></div>`
+}
+
+/* ---------- router ---------- */
+function parse(){const h=location.hash.slice(1)||'/';const [p,q]=h.split('?');return {path:p.replace(/^\//,''),parts:p.split('/').filter(Boolean),q:new URLSearchParams(q||'')}}
+function render(){
+  const {path,parts,q}=parse();
+  renderHeader(path);closeModal();
+  let html='';const p0=parts[0]||'';
+  try{
+    if(p0==='admin') html=vAdmin(parts,q);
+    else html=({'':vHome,listing:vListing,guide:vGuide,records:vRecords,record:vRecordForm,compare:vCompare,forum:vForum,post:vPost,support:vSupport,login:vLogin,register:vRegister,forgot:vForgot,me:vMe,terms:vTerms}[p0]||v404)(parts,q);
+  }catch(err){console.error(err);html=`<div class="wrap page-head"><h1>發生錯誤</h1><p>${esc(err.message)}</p></div>`}
+  $('#app').innerHTML=html+(p0==='admin'?'':footer());
+  window.scrollTo(0,0);
+  after[p0]&&after[p0](parts,q);
+  if(nextModal){modal(nextModal);nextModal=null}
+}
+window.addEventListener('hashchange',render);
+const after={};
+function footer(){return `<footer class="no-print"><div class="wrap row between"><span>© 學租圈 — 只屬於大學生的租屋資訊交流平台（課程原型）</span><span class="row"><a href="#/terms">服務條款與隱私聲明</a><a href="#/admin">後台</a><button class="btn ghost sm" data-act="reset">重設示範資料</button></span></div></footer>`}
+function v404(){return `<div class="wrap page-head"><h1>找不到頁面</h1><p><a href="#/">回首頁</a></p></div>`}
+
+/* =========================================================
+   前台：找房（照片牆 / 地圖 / 篩選）
+   ========================================================= */
+const F={q:'',zone:'',type:'',max:'',tags:[],sort:'match',view:'grid'};
+function matchScore(l,u){
+  if(!hasNeeds(u))return 0;const n=u.needs;let s=0;
+  if(n.budget&&l.price<=n.budget)s++; if(n.zones.includes(l.zone))s++; if(n.type&&l.type===n.type)s++;
+  s+=n.tags.filter(t=>l.tags.includes(t)).length;return s
+}
+function filtered(){
+  const u=cur();
+  let arr=S.listings.filter(l=>{
+    if(F.q&&!(l.title+l.road+l.zone+l.desc).includes(F.q))return false;
+    if(F.zone&&l.zone!==F.zone)return false;
+    if(F.type&&l.type!==F.type)return false;
+    if(F.max&&l.price>Number(F.max))return false;
+    if(F.tags.length&&!F.tags.every(t=>l.tags.includes(t)))return false;
+    return true});
+  const so={price:(a,b)=>a.price-b.price,priceD:(a,b)=>b.price-a.price,rating:(a,b)=>b.rating-a.rating,match:(a,b)=>matchScore(b,u)-matchScore(a,u)||b.rating-a.rating};
+  return arr.sort(so[F.sort]||so.match)
+}
+function lcard(l){
+  const u=cur();const fav=u&&u.favs.includes(l.id);const m=matchScore(l,u);
+  return `<article class="lcard" data-act="open-listing" data-id="${l.id}">
+   ${photo(l,`<button class="fav" data-act="fav" data-id="${l.id}" aria-label="收藏">${fav?'♥':'♡'}</button>`)}
+   <div class="body">
+    <div class="row between"><div class="price">${money(l.price)}<small> /月</small></div><span class="small">★ ${l.rating} <span class="muted">(${l.reviews})</span></span></div>
+    <b style="font-size:15px">${esc(l.title)}</b>
+    <div class="small muted">${esc(l.type)}・${l.size} 坪・${esc(l.road)}</div>
+    <div class="tag-wrap">${l.tags.slice(0,3).map(t=>`<span class="chip">${t}</span>`).join('')}</div>
+    ${m?`<div class="match">✓ 符合你的 ${m} 項租屋需求</div>`:''}
+   </div></article>`
+}
+function mapView(arr){
+  const zp={'光復建功生活圈':[52,48,34],'交大大學路':[74,24,24],'南大校區':[32,72,32],'金山關新':[86,62,22]};
+  return `<div class="map">
+   ${ZONES.map(z=>`<div class="zone" style="left:${zp[z][0]}%;top:${zp[z][1]}%;width:${zp[z][2]}%;aspect-ratio:1"><span>${z}</span></div>`).join('')}
+   <div class="school" style="left:58%;top:36%">清華大學</div><div class="school" style="left:80%;top:15%">陽明交大</div><div class="school" style="left:24%;top:82%">清大南大校區</div>
+   ${arr.map(l=>`<button class="pin" style="left:${l.x}%;top:${l.y}%" data-act="open-listing" data-id="${l.id}" title="${esc(l.title)}">${money(l.price)}</button>`).join('')}
+  </div><p class="tiny muted" style="margin-top:6px">＊示意地圖，點價格標籤可查看房源。</p>`
+}
+function resultsHTML(){
+  const arr=filtered();
+  return `<div class="toolbar">
+    <b>共 ${arr.length} 間房源</b>
+    <div class="row">
+     <select class="in" style="width:auto" data-f="sort">
+      ${[['match','依符合需求'],['price','租金低→高'],['priceD','租金高→低'],['rating','評價最高']].map(([v,t])=>`<option value="${v}" ${F.sort===v?'selected':''}>${t}</option>`).join('')}
+     </select>
+     <div class="seg"><button class="${F.view==='grid'?'on':''}" data-act="view" data-v="grid">照片牆</button><button class="${F.view==='map'?'on':''}" data-act="view" data-v="map">租屋地圖</button></div>
+    </div></div>
+   ${arr.length?(F.view==='map'?mapView(arr):`<div class="cards">${arr.map(lcard).join('')}</div>`)
+     :`<div class="card" style="text-align:center;padding:40px">找不到符合條件的房源，試著放寬篩選條件吧！<br><br><button class="btn ghost" data-act="clear-filter">清除篩選</button></div>`}`
+}
+function vHome(){
+  const u=cur();
+  return `<section class="hero"><div class="wrap">
+   <h1>沒有房東廣告，<br>只有<b>學長姐的真心話</b>。</h1>
+   <p>學租圈是只給大學生使用的租屋資訊交流平台：比較房源、做看房紀錄、交流實際居住經驗。</p>
+   <form class="searchbar" data-form="search">
+    <input class="in q" data-f="q" placeholder="搜尋路段、關鍵字（例：光復路、套房）" value="${esc(F.q)}">
+    <select class="in" data-f="zone"><option value="">全部租屋區域</option>${ZONES.map(z=>`<option ${F.zone===z?'selected':''}>${z}</option>`).join('')}</select>
+    <select class="in" data-f="type"><option value="">全部類型</option>${TYPES.map(z=>`<option ${F.type===z?'selected':''}>${z}</option>`).join('')}</select>
+    <select class="in" data-f="max"><option value="">不限租金</option>${[5000,7000,9000,12000,16000].map(v=>`<option value="${v}" ${String(F.max)===String(v)?'selected':''}>${money(v)} 以下</option>`).join('')}</select>
+    <button class="btn pri" type="submit">搜尋</button>
+   </form>
+   <div class="tagfilter">${TAGS.map(t=>`<button data-act="tagf" data-t="${t}" class="${F.tags.includes(t)?'on':''}">${t}</button>`).join('')}</div>
+  </div></section>
+  <div class="wrap">
+   ${!u?`<div class="banner"><span>👋 你正在以訪客身分瀏覽。<b>註冊並完成學生身分驗證</b>，就能收藏房源、建立看房紀錄、在交流版發文。</span><a class="btn pri sm" href="#/register">免費註冊</a></div>`
+     :!hasNeeds(u)?`<div class="banner" style="background:var(--brand-tint)"><span>設定你的<b>個人租屋需求</b>，房源會依符合程度排序，看屋須知也會客製化。</span><a class="btn dark sm" href="#/me?tab=needs">設定需求</a></div>`:''}
+   <div id="results">${resultsHTML()}</div>
+   <section class="about" id="about">
+    <div class="card"><h3>關於我們</h3>
+     <p class="muted">學租圈由一群新竹的大學生發起。我們發現租屋網站多半是房東與仲介的廣告，學生很難知道「實際住起來怎麼樣」。因此我們做了一個<b>單向、只有學生</b>的平台：不接受房東刊登廣告，所有資訊都來自通過學生身分驗證的同學。</p>
+     <div class="row" style="margin-top:12px"><span class="chip leaf">學生身分驗證</span><span class="chip leaf">無房東廣告</span><span class="chip leaf">貼文人工審核</span></div>
+    </div>
+    <div class="card stack">
+     <div class="feature"><b class="n">1</b><div><b>看屋須知</b><div class="small muted">依你的需求產生看房檢查清單與租屋知識</div></div></div>
+     <div class="feature"><b class="n">2</b><div><b>現場看房紀錄</b><div class="small muted">評分、檢查、拍照、備註，一次記錄完</div></div></div>
+     <div class="feature"><b class="n">3</b><div><b>看房紀錄比較</b><div class="small muted">2～4 間並排比較，自動標出每項最佳</div></div></div>
+     <div class="feature"><b class="n">4</b><div><b>交流版</b><div class="small muted">搜尋學長姐心得，分享你的看屋與居住經驗</div></div></div>
+    </div>
+   </section>
+  </div>`
+}
+function refreshResults(){const r=$('#results');if(r)r.innerHTML=resultsHTML()}
+
+/* ---------- listing detail ---------- */
+function vListing(parts){
+  const l=L(parts[1]);if(!l)return v404();
+  const u=cur();const o=owner();
+  S.viewed[o]=[l.id,...(S.viewed[o]||[]).filter(x=>x!==l.id)].slice(0,20);save();
+  const fav=u&&u.favs.includes(l.id);
+  const posts=S.posts.filter(p=>p.listingId===l.id&&p.status==='published');
+  return `<div class="wrap">
+   <div style="padding-top:18px"><a href="#/" class="small muted">← 回到找房</a></div>
+   <div class="detail">
+    <div>${photo(l)}
+     <div class="card" style="margin-top:14px"><h3 style="margin-bottom:6px">房源描述（學生整理）</h3><p class="muted">${esc(l.desc)}</p>
+      <div class="tag-wrap" style="margin-top:10px">${l.tags.map(t=>`<span class="chip">${t}</span>`).join('')}</div></div>
+     <h3 class="section-t">💬 相關心得（${posts.length}）</h3>
+     ${posts.length?posts.map(postCard).join(''):`<div class="card muted">還沒有人分享這間的心得。<a href="#/forum?new=1&listing=${l.id}">成為第一個分享的人 →</a></div>`}
+    </div>
+    <div class="stack">
+     <div class="card stack">
+      <span class="chip">${esc(l.zone)}</span>
+      <h1 style="font-size:22px">${esc(l.title)}</h1>
+      <div class="price" style="font-size:28px">${money(l.price)}<small> /月</small></div>
+      <div class="kv"><div><span>類型</span><b>${l.type}</b></div><div><span>坪數</span><b>${l.size} 坪</b></div><div><span>樓層</span><b>${l.floor}</b></div><div><span>學生評價</span><b>★ ${l.rating}（${l.reviews}）</b></div></div>
+      <button class="btn ${fav?'ghost':'pri'} block" data-act="fav" data-id="${l.id}">${fav?'♥ 已收藏':'♡ 加入收藏名單'}</button>
+      <a class="btn dark block" href="#/record/new?listing=${l.id}">📝 新增現場看房紀錄</a>
+      <a class="btn ghost block" href="#/guide">📋 看房前先看「看屋須知」</a>
+     </div>
+     <div class="card small muted">學租圈不提供房東聯絡方式，房源資訊皆由學生整理分享。看房時請結伴同行，簽約前務必核對房東身分。</div>
+    </div>
+   </div></div>`
+}
+
+/* =========================================================
+   看屋須知（雙分頁：檢查清單 / 租屋知識）
+   ========================================================= */
+let guideTab='A',knowCat='全部';
+function needItems(u){
+  const n=u.needs,out=[];
+  if(n.budget)out.push([`每月總支出（租金＋水電網）≤ ${money(n.budget)}`,'費用']);
+  if(n.type)out.push([`確認實際格局符合「${n.type}」`,'環境']);
+  n.zones.forEach(z=>out.push([`實際通勤時間（${z} → 學校）`,'環境']));
+  const map={'可養寵':'合約是否明文允許養寵物','可開伙':'有無廚房／電磁爐與排煙','含網路':'網路是否包含在租金、速度多少','機車位':'機車位位置與是否另收費','有電梯':'電梯是否定期保養','有陽台':'陽台可否曬衣','垃圾代收':'垃圾代收時間與費用','含水電':'水電是否真的全包、有無度數上限','管理員':'管理員服務時間','近校區':'步行到校實際時間'};
+  n.tags.forEach(t=>map[t]&&out.push([map[t],'需求']));
+  return out
+}
+function buildChecklist(u){
+  const base=GENERIC.map(([name,cat])=>({id:nid('c'),name,cat,checked:false}));
+  if(u&&hasNeeds(u))return [...needItems(u).map(([name,cat])=>({id:nid('c'),name,cat,checked:false,pri:true})),...base];
+  return base
+}
+function getChecklist(){const o=owner();if(!S.checklists[o]||!S.checklists[o].length){S.checklists[o]=buildChecklist(cur());save()}return S.checklists[o]}
+function vGuide(){
+  const u=cur();const custom=u&&hasNeeds(u);const list=getChecklist();
+  const done=list.filter(i=>i.checked).length;
+  const cats=['全部',...new Set(KNOW.map(k=>k[0]))];
+  return `<div class="wrap">
+   <div class="page-head"><h1>看屋須知</h1><p>出門看房前，先準備好檢查清單與租屋知識。勾選的項目可以直接帶入「現場看房紀錄」。</p></div>
+   ${custom?`<div class="hint" style="background:var(--leaf-soft);color:var(--success)"><span>✓ 已依你的個人租屋需求載入<b>客製清單</b>，相關條件已自動置頂。</span><button class="btn ghost sm" data-act="cl-reset">重置客製化清單</button></div>`
+     :`<div class="hint"><span>目前顯示<b>通用清單</b>。${u?'設定個人租屋需求後，可產生專屬你的客製清單。':'登入並設定個人租屋需求，即可產生客製清單。'}</span><a class="btn dark sm" href="${u?'#/me?tab=needs':'#/login?r=/guide'}">${u?'去設定需求':'登入／設定'}</a></div>`}
+   <div class="card" style="margin-top:16px">
+    <div class="tabs"><button class="${guideTab==='A'?'on':''}" data-act="gtab" data-v="A">Tab A｜檢查清單</button><button class="${guideTab==='B'?'on':''}" data-act="gtab" data-v="B">Tab B｜租屋知識</button></div>
+    ${guideTab==='A'?`
+     <div class="row between" style="margin-bottom:10px"><span class="small muted">已完成 ${done} / ${list.length}</span><button class="btn ghost sm" data-act="cl-add">＋ 新增項目</button></div>
+     <div class="progress" style="margin-bottom:14px"><i style="width:${list.length?done/list.length*100:0}%"></i></div>
+     <div>${list.map(i=>`<div class="cl-item ${i.checked?'done':''} ${i.pri?'pri':''}">
+       <input type="checkbox" ${i.checked?'checked':''} data-act="cl-toggle" data-id="${i.id}" style="width:18px;height:18px;accent-color:var(--leaf);flex-shrink:0">
+       <span class="nm">${esc(i.name)} ${i.pri?'<span class="chip acc tiny">依你的需求</span>':''}${i.custom?'<span class="chip blue tiny">自訂</span>':''}</span>
+       <span class="chip">${esc(i.cat)}</span>
+       <button class="x" data-act="cl-del" data-id="${i.id}" aria-label="刪除">✕</button></div>`).join('')}</div>`
+    :`<div class="tag-wrap" style="margin-bottom:14px">${cats.map(c=>`<button class="chip ${knowCat===c?'on':''}" data-act="kcat" data-v="${c}">${c}</button>`).join('')}</div>
+     ${KNOW.filter(k=>knowCat==='全部'||k[0]===knowCat).map((k,i)=>{const added=list.some(x=>x.name===k[3]);return `<div class="know">
+       <div class="row between"><b>${k[1]}</b><span class="chip">${k[0]}</span></div>
+       <p class="small muted" style="margin:6px 0 10px">${k[2]}</p>
+       <button class="btn ${added?'ghost':'leaf'} sm" data-act="k-add" data-i="${KNOW.indexOf(k)}" ${added?'disabled':''}>${added?'✓ 已在清單中':'＋ 加入檢查清單'}</button></div>`}).join('')}`}
+   </div>
+   <div class="sticky-act no-print"><span class="small">已勾選 <b>${done}</b> 項，可帶入現場看房紀錄</span><button class="btn pri sm" data-act="carry">帶入現場看房紀錄 →</button></div>
+  </div>`
+}
+function clAddModal(){
+  modal(`<h3>新增檢查項目</h3><div class="stack"><div><label class="f">項目名稱 <em>*</em></label><input class="in" id="m-name" placeholder="例：浴室有無對外窗"></div>
+  <div><label class="f">分類</label><select class="in" id="m-cat">${['環境','設備','安全','費用','需求','其他'].map(c=>`<option>${c}</option>`).join('')}</select></div><div class="err hide" id="m-err">請輸入項目名稱</div></div>
+  <div class="acts"><button class="btn ghost" data-act="close">取消</button><button class="btn pri" data-act="cl-add-ok">確定</button></div>`);
+  setTimeout(()=>$('#m-name')&&$('#m-name').focus(),50)
+}
+
+/* =========================================================
+   現場看房紀錄（新增 / 編輯）
+   ========================================================= */
+let RF=null;
+function blankRecord(){return {id:null,owner:owner(),status:'draft',mode:'pick',listingId:'',manual:{name:'',addr:'',rent:''},date:dstr(0),time:'',overall:0,impression:'',ratings:{},checks:['水壓','網路','異味','壁癌'].map(name=>({name,v:''})),pros:[],cons:[],prosText:'',consText:'',photos:[],notes:''}}
+function rName(r){return r.mode==='pick'&&L(r.listingId)?L(r.listingId).title:(r.manual&&r.manual.name)||'（未命名物件）'}
+function rRent(r){return r.mode==='pick'&&L(r.listingId)?L(r.listingId).price:Number(r.manual&&r.manual.rent)||0}
+function vRecordForm(parts,q){
+  const o=owner();
+  if(parts[1]==='edit'){const r=S.records.find(x=>x.id===parts[2]&&x.owner===o);if(!r)return v404();RF=JSON.parse(JSON.stringify(r))}
+  else{RF=blankRecord();if(q.get('listing')){RF.listingId=q.get('listing')}}
+  const carry=S.carry[o]||[];
+  if(carry.length){carry.forEach(n=>{if(!RF.checks.some(c=>c.name===n))RF.checks.push({name:n,v:''})});S.carry[o]=[];save();setTimeout(()=>toast(`已帶入 ${carry.length} 項看屋須知勾選項目`),200)}
+  const u=cur();
+  const favs=u?u.favs:[];const viewed=S.viewed[o]||[];
+  const opt=(ids,label)=>ids.length?`<optgroup label="${label}">${ids.map(id=>L(id)).filter(Boolean).map(l=>`<option value="${l.id}" ${RF.listingId===l.id?'selected':''}>${esc(l.title)}（${money(l.price)}）</option>`).join('')}</optgroup>`:'';
+  const others=S.listings.map(l=>l.id).filter(id=>!favs.includes(id)&&!viewed.includes(id));
+  return `<div class="wrap" style="max-width:860px">
+   <div class="page-head"><a href="#/records" class="small muted">← 我的看房紀錄</a><h1 style="margin-top:6px">${RF.id?'編輯':'新增'}現場看房紀錄</h1>
+   ${!u?`<div class="hint" style="margin-top:10px"><span>你目前未登入，紀錄會先<b>暫存在這台裝置</b>。登入後會自動雲端同步。</span><a class="btn dark sm" href="#/login?r=/records">登入</a></div>`:''}</div>
+   <form data-form="record" class="card" novalidate>
+    <div class="fsec"><h3><span class="num">1</span>選擇關聯物件</h3>
+     <div class="seg" style="margin-bottom:12px"><button type="button" class="${RF.mode==='pick'?'on':''}" data-act="rmode" data-v="pick">從已收藏／已瀏覽選擇</button><button type="button" class="${RF.mode==='manual'?'on':''}" data-act="rmode" data-v="manual">手動輸入物件資訊</button></div>
+     <div id="pick-box" class="${RF.mode==='pick'?'':'hide'}"><label class="f">物件 <em>*</em></label>
+      <select class="in" name="listingId"><option value="">請選擇物件</option>${opt(favs,'♥ 已收藏')}${opt(viewed.filter(x=>!favs.includes(x)),'👀 最近瀏覽')}${opt(others,'其他房源')}</select><div class="err" data-err="listing"></div></div>
+     <div id="manual-box" class="grid3 ${RF.mode==='manual'?'':'hide'}">
+      <div><label class="f">物件名稱 <em>*</em></label><input class="in" name="mname" value="${esc(RF.manual.name)}" placeholder="例：光復路頂加套房"><div class="err" data-err="mname"></div></div>
+      <div><label class="f">地址／路段</label><input class="in" name="maddr" value="${esc(RF.manual.addr)}"></div>
+      <div><label class="f">月租金</label><input class="in" name="mrent" type="number" min="0" value="${esc(RF.manual.rent)}"></div>
+     </div></div>
+    <div class="fsec"><h3><span class="num">2</span>看房基本資訊</h3>
+     <div class="grid2"><div><label class="f">看房日期 <em>*</em></label><input class="in" type="date" name="date" value="${esc(RF.date)}"><div class="err" data-err="date"></div></div>
+     <div><label class="f">看房時間</label><input class="in" type="time" name="time" value="${esc(RF.time)}"></div></div>
+     <div style="margin-top:12px"><label class="f">整體印象 <em>*</em></label>
+      <div class="row"><div class="stars" data-k="overall">${[1,2,3,4,5].map(v=>`<button type="button" data-act="star" data-k="overall" data-v="${v}" class="${RF.overall>=v?'on':''}">★</button>`).join('')}</div><span class="small muted" id="ov-t">${RF.overall?RF.overall+' / 5':'請評分'}</span></div>
+      <div class="err" data-err="overall"></div>
+      <textarea class="in" name="impression" placeholder="一句話描述你的整體感受" style="margin-top:8px;min-height:64px">${esc(RF.impression)}</textarea></div></div>
+    <div class="fsec"><h3><span class="num">3</span>進行評分 <span class="tiny muted">（分數越高代表越好）</span></h3>
+     <div class="rate-grid">${DIMS.map(([k,t])=>`<div class="rate-row"><span>${t}</span><div class="stars">${[1,2,3,4,5].map(v=>`<button type="button" data-act="star" data-k="${k}" data-v="${v}" class="${(RF.ratings[k]||0)>=v?'on':''}">★</button>`).join('')}</div></div>`).join('')}</div></div>
+    <div class="fsec"><h3><span class="num">4</span>現場檢查清單</h3><div id="checks">${checksHTML()}</div>
+     <div class="row" style="margin-top:10px"><input class="in" id="new-check" placeholder="新增檢查項目" style="flex:1;min-width:160px"><button type="button" class="btn ghost sm" data-act="add-check">＋ 新增</button></div></div>
+    <div class="fsec"><h3><span class="num">5</span>優點與缺點</h3>
+     <label class="f">快速標記優點</label><div class="tag-wrap" style="margin-bottom:8px">${PROS.map(t=>`<button type="button" class="chip ${RF.pros.includes(t)?'on':''}" data-act="ptag" data-g="pros" data-t="${t}">＋ ${t}</button>`).join('')}</div>
+     <textarea class="in" name="prosText" placeholder="其他優點" style="min-height:60px">${esc(RF.prosText)}</textarea>
+     <label class="f" style="margin-top:12px">快速標記缺點</label><div class="tag-wrap" style="margin-bottom:8px">${CONS.map(t=>`<button type="button" class="chip ${RF.cons.includes(t)?'on':''}" data-act="ptag" data-g="cons" data-t="${t}">－ ${t}</button>`).join('')}</div>
+     <textarea class="in" name="consText" placeholder="其他缺點" style="min-height:60px">${esc(RF.consText)}</textarea></div>
+    <div class="fsec"><h3><span class="num">6</span>現場照片</h3>
+     <label class="upload"><input type="file" accept="image/*" multiple id="ph-in" class="hide">📷 點此上傳照片（可多張，會自動壓縮）</label>
+     <div class="thumbs" id="thumbs">${thumbsHTML()}</div></div>
+    <div class="fsec"><h3><span class="num">7</span>其他備註</h3><textarea class="in" name="notes" placeholder="例：房東說可議價、下個月可入住">${esc(RF.notes)}</textarea></div>
+    <div class="save-bar">
+     <button type="button" class="btn ghost" data-act="rsave" data-v="draft">儲存為草稿</button>
+     <button type="button" class="btn dark" data-act="rsave" data-v="only">僅儲存</button>
+     <button type="button" class="btn pri" data-act="rsave" data-v="compare">儲存並加入比較</button>
+    </div>
+   </form></div>`
+}
+function checksHTML(){return RF.checks.map((c,i)=>`<div class="check-row"><span>${esc(c.name)}</span><div class="row" style="gap:6px"><div class="tri"><button type="button" data-act="chk" data-i="${i}" data-v="ok" class="${c.v==='ok'?'ok':''}">✓ 正常</button><button type="button" data-act="chk" data-i="${i}" data-v="bad" class="${c.v==='bad'?'bad':''}">✕ 有問題</button></div>${i>3?`<button type="button" class="x" data-act="del-check" data-i="${i}">✕</button>`:''}</div></div>`).join('')}
+function thumbsHTML(){return RF.photos.map((p,i)=>`<div><img src="${p}" alt="現場照片 ${i+1}"><button type="button" data-act="del-photo" data-i="${i}">✕</button></div>`).join('')}
+after.record=()=>{
+  const inp=$('#ph-in');if(!inp)return;
+  inp.addEventListener('change',e=>{[...e.target.files].slice(0,8).forEach(f=>compress(f,url=>{RF.photos.push(url);$('#thumbs').innerHTML=thumbsHTML()}));inp.value=''})
+};
+function compress(file,cb){
+  const rd=new FileReader();rd.onload=()=>{const img=new Image();img.onload=()=>{const m=640,s=Math.min(1,m/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=img.width*s;c.height=img.height*s;c.getContext('2d').drawImage(img,0,0,c.width,c.height);cb(c.toDataURL('image/jpeg',.7))};img.src=rd.result};rd.readAsDataURL(file)
+}
+function saveRecord(kind){
+  const f=document.querySelector('form[data-form=record]');
+  RF.listingId=f.listingId.value;RF.manual={name:f.mname.value.trim(),addr:f.maddr.value.trim(),rent:f.mrent.value};
+  RF.date=f.date.value;RF.time=f.time.value;RF.impression=f.impression.value.trim();RF.prosText=f.prosText.value.trim();RF.consText=f.consText.value.trim();RF.notes=f.notes.value.trim();
+  document.querySelectorAll('[data-err]').forEach(e=>e.textContent='');document.querySelectorAll('.in.bad').forEach(e=>e.classList.remove('bad'));
+  if(kind!=='draft'){
+    const errs=[];
+    if(RF.mode==='pick'&&!RF.listingId){errs.push('listing');f.listingId.classList.add('bad')}
+    if(RF.mode==='manual'&&!RF.manual.name){errs.push('mname');f.mname.classList.add('bad')}
+    if(!RF.date){errs.push('date');f.date.classList.add('bad')}
+    if(!RF.overall)errs.push('overall');
+    if(errs.length){errs.forEach(k=>{const e=document.querySelector(`[data-err=${k}]`);if(e)e.textContent='此為必填欄位'});toast('儲存失敗：資料不完整，請填寫必填欄位');document.querySelector(`[data-err=${errs[0]}]`).scrollIntoView({behavior:'smooth',block:'center'});return}
+  }
+  RF.status=kind==='draft'?'draft':'saved';RF.updated=new Date().toISOString();RF.owner=owner();
+  if(!RF.id){RF.id=nid('R');RF.created=RF.updated;S.records.unshift(RF)}else{const i=S.records.findIndex(r=>r.id===RF.id);S.records[i]=RF}
+  if(kind==='compare'){const o=owner();S.compare[o]=S.compare[o]||[];if(!S.compare[o].includes(RF.id)){if(S.compare[o].length>=4){toast('比較清單已滿 4 筆，未加入比較')}else S.compare[o].push(RF.id)}}
+  save();
+  if(kind==='draft'){toast('已儲存為草稿');go('/records');return}
+  modal(`<h3>✓ 儲存成功</h3><p class="muted">「${esc(rName(RF))}」已${kind==='compare'?'儲存並加入比較清單':'儲存到我的看房紀錄'}。接下來要做什麼？</p>
+   <div class="acts"><a class="btn ghost" href="#/records">返回紀錄列表</a><a class="btn ghost" href="#/record/new" data-act="new-again">繼續新增下一筆</a><a class="btn pri" href="#/compare">${kind==='compare'?'前往比較':'看房紀錄比較'}</a></div>`)
+}
+
+/* ---------- 我的看房紀錄 ---------- */
+function vRecords(){
+  const o=owner();const u=cur();
+  const list=S.records.filter(r=>r.owner===o);const sel=S.compare[o]||[];
+  return `<div class="wrap" style="max-width:900px">
+   <div class="page-head row between"><div><h1>我的看房紀錄</h1><p>勾選 2～4 筆完成的紀錄即可開始比較。</p></div><a class="btn pri" href="#/record/new">＋ 新增看房紀錄</a></div>
+   ${!u?`<div class="hint" style="margin-bottom:14px"><span>目前為<b>本機暫存</b>模式，登入後這些紀錄會自動同步到你的帳號。</span><a class="btn dark sm" href="#/login?r=/records">登入同步</a></div>`:''}
+   ${list.length?`<div class="rec-list">${list.map(r=>{const l=L(r.listingId);const on=sel.includes(r.id);const bad=r.checks.filter(c=>c.v==='bad').length;return `
+    <div class="card rec ${on?'sel':''}">
+     <label class="chk" style="align-self:center" title="${r.status==='draft'?'草稿無法比較':''}"><input type="checkbox" data-act="rsel" data-id="${r.id}" ${on?'checked':''} ${r.status==='draft'?'disabled':''}></label>
+     <div class="mini">${r.photos[0]?`<img src="${r.photos[0]}" alt="">`:'🏠'}</div>
+     <div class="info"><div class="row" style="gap:6px">${r.status==='draft'?'<span class="badge b-pending">草稿</span>':'<span class="badge b-ok">已完成</span>'}${S.finalPick[o]===r.id?'<span class="badge b-blue">最終選擇</span>':''}</div>
+      <b>${esc(rName(r))}</b>
+      <div class="small muted">${esc(r.date)} ${esc(r.time)}・${money(rRent(r))}/月・整體 ${starTxt(r.overall)}${bad?`・<span style="color:var(--warn)">${bad} 項檢查有問題</span>`:''}</div></div>
+     <div class="row acts" style="gap:6px"><button class="btn ghost sm" data-act="rview" data-id="${r.id}">查看</button><a class="btn ghost sm" href="#/record/edit/${r.id}">編輯</a><button class="btn ghost sm" data-act="rdel" data-id="${r.id}">刪除</button></div>
+    </div>`}).join('')}</div>`
+   :`<div class="card" style="text-align:center;padding:40px"><div style="font-size:40px">📝</div><p>還沒有看房紀錄。看房時打開這裡，邊看邊記！</p><br><a class="btn pri" href="#/record/new">新增第一筆</a> <a class="btn ghost" href="#/guide">先看看屋須知</a></div>`}
+   <div class="sticky-act no-print"><span class="small">已選 <b>${sel.length}</b> / 4 筆（需 2～4 筆）</span><div class="row"><button class="btn ghost sm" style="color:#fff;border-color:rgba(255,255,255,.3);background:transparent" data-act="rsel-clear" ${sel.length?'':'disabled'}>清除</button><a class="btn pri sm" href="#/compare" ${sel.length<2?'data-act="need2"':''}>開始比較 →</a></div></div>
+  </div>`
+}
+function recordDetail(r){
+  modal(`<h3>${esc(rName(r))}</h3>
+   <div class="small muted">${esc(r.date)} ${esc(r.time)}・${money(rRent(r))}/月</div>
+   <p style="margin:10px 0"><span style="color:var(--gold)">${starTxt(r.overall)}</span> ${esc(r.impression)}</p>
+   <div class="rate-grid small">${DIMS.map(([k,t])=>`<div class="rate-row"><span>${t}</span><span style="color:var(--gold)">${starTxt(r.ratings[k])}</span></div>`).join('')}</div>
+   <h4 style="margin:12px 0 6px">檢查結果</h4><div class="tag-wrap">${r.checks.map(c=>`<span class="chip ${c.v==='ok'?'leaf':c.v==='bad'?'acc':'gray'}">${c.v==='ok'?'✓':c.v==='bad'?'✕':'－'} ${esc(c.name)}</span>`).join('')}</div>
+   <h4 style="margin:12px 0 6px">優點</h4><div class="tag-wrap">${r.pros.map(t=>`<span class="chip leaf">${t}</span>`).join('')}</div><p class="small">${esc(r.prosText)}</p>
+   <h4 style="margin:12px 0 6px">缺點</h4><div class="tag-wrap">${r.cons.map(t=>`<span class="chip acc">${t}</span>`).join('')}</div><p class="small">${esc(r.consText)}</p>
+   ${r.photos.length?`<div class="thumbs">${r.photos.map(p=>`<div><img src="${p}" alt=""></div>`).join('')}</div>`:''}
+   ${r.notes?`<h4 style="margin:12px 0 6px">備註</h4><p class="small">${esc(r.notes)}</p>`:''}
+   <div class="acts"><button class="btn ghost" data-act="close">關閉</button><a class="btn dark" href="#/record/edit/${r.id}">編輯</a></div>`)
+}
+
+/* =========================================================
+   看房紀錄比較
+   ========================================================= */
+function vCompare(){
+  const o=owner();
+  const ids=(S.compare[o]||[]).filter(id=>S.records.some(r=>r.id===id&&r.owner===o&&r.status==='saved'));S.compare[o]=ids;
+  const recs=ids.map(id=>S.records.find(r=>r.id===id));
+  if(recs.length<2)return `<div class="wrap" style="max-width:700px"><div class="page-head"><h1>看房紀錄比較</h1></div>
+   <div class="card" style="text-align:center;padding:40px"><div style="font-size:40px">⚖️</div><p>請先在「我的看房紀錄」勾選 <b>2～4 筆</b>要比較的紀錄（目前 ${recs.length} 筆）。</p><br><a class="btn pri" href="#/records">前往勾選</a></div></div>`;
+  const n=recs.length;const fin=S.finalPick[o];
+  const rows=[['rent','月租金',r=>rRent(r),'low'],['overall','整體印象',r=>r.overall,'high'],...DIMS.map(([k,t])=>[k,t,r=>r.ratings[k]||0,'high'])];
+  const maxRent=Math.max(...recs.map(rRent),1);
+  const bestCount={};recs.forEach(r=>bestCount[r.id]=0);
+  const dims=rows.map(([k,t,fn,dir])=>{
+    const vals=recs.map(fn);const valid=vals.filter(v=>v>0);const best=valid.length?(dir==='low'?Math.min(...valid):Math.max(...valid)):null;
+    recs.forEach((r,i)=>{if(vals[i]===best&&best!==null)bestCount[r.id]++});
+    return `<div class="dim"><h4>${t}${dir==='low'?' <span class="tiny muted">（越低越好）</span>':''}</h4><div class="dim-vals cols-${n}">
+     ${recs.map((r,i)=>{const v=vals[i];const isB=v===best&&best!==null;return `<div class="dv ${isB?'best':''}"><div class="nm">${i+1}. ${esc(rName(r))}</div>
+      <div class="row between"><b>${k==='rent'?money(v):v?v+' / 5':'未評分'}</b>${isB?'<span class="tiny" style="color:var(--leaf);font-weight:700">最佳</span>':''}</div>
+      <div class="bar"><i style="width:${k==='rent'?(v/maxRent*100):(v/5*100)}%"></i></div></div>`}).join('')}</div></div>`}).join('');
+  return `<div class="wrap">
+   <div class="page-head row between"><div><h1>看房紀錄比較</h1><p>綠框為該項目表現最佳的物件。可調整順序、移除或標記最終選擇。</p></div>
+    <div class="row no-print"><a class="btn ghost sm" href="#/record/new">＋ 繼續新增看房紀錄</a><button class="btn ghost sm" data-act="export">⬇ 匯出（PDF／圖片）</button><button class="btn dark sm" data-act="share">分享</button></div></div>
+   <div class="cmp-head cols-${n}" style="display:grid">
+    ${recs.map((r,i)=>`<div class="cmp-card ${fin===r.id?'final':''}"><span class="no">#${i+1}</span>
+     <b style="display:block;margin-top:4px">${esc(rName(r))}</b>
+     <div class="small muted">${money(rRent(r))}/月・${esc(r.date)}</div>
+     <div class="small" style="margin-top:4px">🏆 ${bestCount[r.id]} 項最佳</div>
+     ${fin===r.id?'<div class="badge b-ok" style="margin-top:6px">✓ 最終選擇</div>':''}
+     <div class="row no-print" style="gap:4px;margin-top:8px">
+      <button class="btn ghost sm" data-act="cmp-move" data-i="${i}" data-d="-1" ${i===0?'disabled':''} aria-label="左移">◀</button>
+      <button class="btn ghost sm" data-act="cmp-move" data-i="${i}" data-d="1" ${i===n-1?'disabled':''} aria-label="右移">▶</button>
+      <button class="btn ghost sm" data-act="rview" data-id="${r.id}">詳細</button>
+      <button class="btn ghost sm" data-act="cmp-rm" data-id="${r.id}">移除</button>
+     </div>
+     <button class="btn ${fin===r.id?'leaf':'ghost'} sm block no-print" style="margin-top:6px" data-act="final" data-id="${r.id}">${fin===r.id?'已標記最終選擇':'標記為最終選擇'}</button>
+    </div>`).join('')}
+   </div>
+   <div class="card" style="margin-top:16px">${dims}
+    <div class="dim"><h4>優點</h4><div class="dim-vals cols-${n}">${recs.map((r,i)=>`<div class="dv"><div class="nm">${i+1}. ${esc(rName(r))}</div><div class="tag-wrap" style="margin-top:6px">${r.pros.map(t=>`<span class="chip leaf">${t}</span>`).join('')||'<span class="muted">—</span>'}</div>${r.prosText?`<div class="small" style="margin-top:4px">${esc(r.prosText)}</div>`:''}</div>`).join('')}</div></div>
+    <div class="dim"><h4>缺點</h4><div class="dim-vals cols-${n}">${recs.map((r,i)=>`<div class="dv"><div class="nm">${i+1}. ${esc(rName(r))}</div><div class="tag-wrap" style="margin-top:6px">${r.cons.map(t=>`<span class="chip acc">${t}</span>`).join('')||'<span class="muted">—</span>'}</div>${r.consText?`<div class="small" style="margin-top:4px">${esc(r.consText)}</div>`:''}</div>`).join('')}</div></div>
+    <div class="dim" style="border:none"><h4>現場檢查有問題的項目</h4><div class="dim-vals cols-${n}">${recs.map((r,i)=>{const b=r.checks.filter(c=>c.v==='bad');return `<div class="dv ${b.length?'':'best'}"><div class="nm">${i+1}. ${esc(rName(r))}</div><div style="margin-top:4px">${b.length?b.map(c=>esc(c.name)).join('、'):'全部正常 ✓'}</div></div>`}).join('')}</div></div>
+   </div>
+   <div class="row no-print" style="justify-content:flex-end;margin-top:16px"><button class="btn ghost" data-act="cmp-end">結束比較</button></div>
+  </div>`
+}
+function compareSummary(){
+  const o=owner();const recs=(S.compare[o]||[]).map(id=>S.records.find(r=>r.id===id)).filter(Boolean);
+  return '【學租圈 看房比較】\n'+recs.map((r,i)=>`${i+1}. ${rName(r)}${S.finalPick[o]===r.id?'（最終選擇）':''}\n   租金 ${money(rRent(r))}／整體 ${r.overall}/5／`+DIMS.map(([k,t])=>`${t}${r.ratings[k]||'-'}`).join(' ')+`\n   優點：${[...r.pros,r.prosText].filter(Boolean).join('、')||'—'}\n   缺點：${[...r.cons,r.consText].filter(Boolean).join('、')||'—'}`).join('\n')
+}
+function exportImage(){
+  const o=owner();const recs=(S.compare[o]||[]).map(id=>S.records.find(r=>r.id===id)).filter(Boolean);
+  const W=Math.max(720,200+recs.length*220),rowH=34,rows=[['月租金',r=>money(rRent(r))],['整體印象',r=>r.overall+'/5'],...DIMS.map(([k,t])=>[t,r=>(r.ratings[k]||'-')+'/5']),['優點',r=>r.pros.slice(0,3).join('、')||'—'],['缺點',r=>r.cons.slice(0,3).join('、')||'—']];
+  const H=120+rows.length*rowH+40;const c=document.createElement('canvas');c.width=W*2;c.height=H*2;const g=c.getContext('2d');g.scale(2,2);
+  g.fillStyle='#F4F0E2';g.fillRect(0,0,W,H);g.fillStyle='#1F2E3D';g.font='bold 22px sans-serif';g.fillText('學租圈｜看房紀錄比較',24,40);
+  g.font='13px sans-serif';g.fillStyle='#52606E';g.fillText(new Date().toLocaleDateString(),24,62);
+  const cw=(W-200)/recs.length;g.font='bold 14px sans-serif';
+  recs.forEach((r,i)=>{g.fillStyle=S.finalPick[o]===r.id?'#2E6F55':'#1F2E3D';g.fillText((i+1)+'. '+rName(r).slice(0,12)+(S.finalPick[o]===r.id?' ✓':''),180+i*cw,98)});
+  rows.forEach(([t,fn],ri)=>{const y=120+ri*rowH;g.fillStyle=ri%2?'#FFFFFF':'#E3EEF7';g.fillRect(16,y,W-32,rowH);g.fillStyle='#52606E';g.font='13px sans-serif';g.fillText(t,28,y+22);g.fillStyle='#1F2E3D';recs.forEach((r,i)=>g.fillText(String(fn(r)).slice(0,16),180+i*cw,y+22))});
+  const a=document.createElement('a');a.download='看房比較.png';a.href=c.toDataURL('image/png');a.click();toast('已下載比較圖片')
+}
+
+/* =========================================================
+   交流版
+   ========================================================= */
+let forumQ='',forumCat='全部';
+const CATS=['看屋心得','租屋心得','問題求助','生活圈情報'];
+function postCard(p){const l=L(p.listingId);const nc=p.comments.filter(c=>c.status==='shown').length;
+ return `<div class="post" data-act="open-post" data-id="${p.id}"><div class="row" style="gap:6px"><span class="chip">${p.cat}</span>${l?`<span class="chip leaf">🏠 ${esc(l.road)}</span>`:''}</div>
+ <h3>${esc(p.title)}</h3><p>${esc(p.body)}</p><div class="small muted" style="margin-top:6px">${esc(p.author)}・${fmt(p.created)}・💬 ${nc}・👍 ${p.likes}</div></div>`}
+function vForum(parts,q){
+  const u=cur();
+  if(q.get('new')||parts[1]==='edit')return vPostForm(parts,q);
+  const pubs=S.posts.filter(p=>p.status==='published'&&(forumCat==='全部'||p.cat===forumCat)&&(!forumQ||(p.title+p.body).includes(forumQ))).sort((a,b)=>b.created.localeCompare(a.created));
+  const mine=u?S.posts.filter(p=>p.uid===u.id&&p.status!=='published'&&p.status!=='deleted'):[];
+  return `<div class="wrap">
+   <div class="page-head"><h1>交流版</h1><p>搜尋學長姐的看屋、居住心得，或分享你的經驗。所有貼文經審核後公開。</p></div>
+   <div class="tabs"><button class="on">搜尋心得</button><button data-act="forum-new">＋ 分享貼文</button></div>
+   <div class="layout-side"><div>
+    <form class="row" data-form="forum-search" style="margin-bottom:12px"><input class="in" name="q" placeholder="輸入關鍵字（例：電費、隔音、光復路）" value="${esc(forumQ)}" style="flex:1;min-width:180px"><button class="btn dark">搜尋</button></form>
+    <div class="tag-wrap" style="margin-bottom:14px">${['全部',...CATS].map(c=>`<button class="chip ${forumCat===c?'on':''}" data-act="fcat" data-v="${c}">${c}</button>`).join('')}</div>
+    ${forumQ?`<p class="small muted" style="margin-bottom:8px">「${esc(forumQ)}」的搜尋結果：${pubs.length} 篇 <a href="javascript:void 0" data-act="fclear">清除</a></p>`:''}
+    ${pubs.length?pubs.map(postCard).join(''):'<div class="card muted">沒有符合的貼文，試試其他關鍵字。</div>'}
+   </div><aside class="stack">
+    <div class="card"><b>分享你的經驗</b><p class="small muted" style="margin:6px 0 10px">看完房、住了一陣子？你的心得能幫到下一位同學。</p><button class="btn pri block" data-act="forum-new">＋ 新增貼文</button></div>
+    ${u?`<div class="card"><b>我的貼文狀態</b>${mine.length?mine.map(p=>`<div class="log"><div class="row between"><span>${esc(p.title)}</span>${p.status==='pending'?'<span class="badge b-pending">待審核</span>':'<span class="badge b-bad">已退回</span>'}</div>${p.status==='returned'?`<div class="small" style="color:var(--warn)">修改意見：${esc(p.reason)}</div><a class="small" href="#/forum/edit/${p.id}">修改貼文內容 →</a>`:''}</div>`).join(''):'<p class="small muted" style="margin-top:6px">沒有審核中的貼文</p>'}</div>`:''}
+    <div class="card small muted"><b style="color:var(--ink)">發文規範</b><br>禁止廣告、外部聯絡方式招攬、人身攻擊與不實資訊。違規將被刪文或停權。</div>
+   </aside></div></div>`
+}
+function vPostForm(parts,q){
+  const u=cur();
+  if(!u){setTimeout(()=>needLogin('/forum?new=1','發表貼文需要登入並完成學生身分驗證。'),50);return vForumList()}
+  let p={id:null,title:'',cat:'看屋心得',listingId:q.get('listing')||'',body:''};
+  if(parts[1]==='edit'){const e=S.posts.find(x=>x.id===parts[2]&&x.uid===u.id);if(e)p={...e}}
+  if(S.postDraft){p.body=S.postDraft;p.cat='看屋心得';p.title='我的看房比較結果';S.postDraft=null;save()}
+  return `<div class="wrap" style="max-width:820px">
+   <div class="page-head"><a href="javascript:void 0" data-act="forum-back" class="small muted">← 回交流版</a><h1 style="margin-top:6px">${p.id?'修改貼文':'分享貼文'}</h1>
+   ${u.verify!=='verified'?`<div class="hint" style="margin-top:10px;background:var(--peach-soft);color:#8C4228"><span>你的學生身分尚未驗證，貼文仍可送出，但審核時間可能較長。</span><a class="btn ghost sm" href="#/me?tab=verify">去驗證</a></div>`:''}</div>
+   <form class="card stack" data-form="post" data-id="${p.id||''}">
+    <div class="grid2"><div><label class="f">分類</label><select class="in" name="cat">${CATS.map(c=>`<option ${p.cat===c?'selected':''}>${c}</option>`).join('')}</select></div>
+     <div><label class="f">相關房源（選填）</label><select class="in" name="listingId"><option value="">無</option>${S.listings.map(l=>`<option value="${l.id}" ${p.listingId===l.id?'selected':''}>${esc(l.title)}</option>`).join('')}</select></div></div>
+    <div><label class="f">標題 <em>*</em></label><input class="in" name="title" maxlength="60" value="${esc(p.title)}"></div>
+    <div><label class="f">貼文內容 <em>*</em></label><textarea class="in" name="body" style="min-height:180px" placeholder="分享你的看房、居住經驗……">${esc(p.body)}</textarea></div>
+    <div class="err" id="post-err"></div>
+    <div class="row" style="justify-content:flex-end"><button type="button" class="btn ghost" data-act="post-preview">預覽貼文</button><button class="btn pri">發布貼文</button></div>
+    <div id="preview"></div>
+   </form></div>`
+}
+function vForumList(){return vForum([],new URLSearchParams())}
+function vPost(parts){
+  const p=S.posts.find(x=>x.id===parts[1]);const u=cur();
+  if(!p||(p.status!=='published'&&!(u&&u.id===p.uid)))return v404();
+  const l=L(p.listingId);
+  const cm=p.comments.filter(c=>c.status==='shown'||(u&&c.uid===u.id&&c.status==='pending'));
+  return `<div class="wrap" style="max-width:820px">
+   <div class="page-head"><a href="#/forum" class="small muted">← 回交流版</a></div>
+   <article class="card"><div class="row" style="gap:6px"><span class="chip">${p.cat}</span>${p.status!=='published'?'<span class="badge b-pending">審核中，僅你可見</span>':''}</div>
+    <h1 style="font-size:22px;margin:8px 0">${esc(p.title)}</h1><div class="small muted">${esc(p.author)}・${fmt(p.created)}</div>
+    <p style="margin-top:14px;white-space:pre-wrap">${esc(p.body)}</p>
+    ${l?`<a href="#/listing/${l.id}" class="card row" style="margin-top:14px;text-decoration:none;padding:12px;box-shadow:none"><span>🏠</span><span style="flex:1;min-width:0"><b>${esc(l.title)}</b><br><span class="small muted">${money(l.price)}/月</span></span><span>→</span></a>`:''}
+    <div class="row" style="margin-top:14px"><button class="btn ghost sm" data-act="like" data-id="${p.id}">👍 有幫助（${p.likes}）</button></div>
+   </article>
+   <h3 class="section-t">留言（${p.comments.filter(c=>c.status==='shown').length}）</h3>
+   <div class="card">${cm.map(c=>`<div class="cmt ${c.status==='pending'?'pending':''}"><b class="small">${esc(c.author)}</b> <span class="tiny muted">${fmt(c.created)}</span>${c.status==='pending'?' <span class="badge b-pending">審核中</span>':''}<div>${esc(c.body)}</div></div>`).join('')||'<p class="muted small">還沒有留言</p>'}
+    <form data-form="comment" data-id="${p.id}" class="row" style="margin-top:12px"><input class="in" name="body" placeholder="${u?'留言（送出後需審核）':'登入後即可留言'}" style="flex:1;min-width:180px"><button class="btn dark">送出</button></form></div>
+  </div>`
+}
+
+/* =========================================================
+   客服中心
+   ========================================================= */
+function vSupport(){
+  const u=cur();const mine=u?S.tickets.filter(t=>t.account===u.email):[];
+  return `<div class="wrap" style="max-width:900px">
+   <div class="page-head"><h1>客服中心</h1><p>有任何問題或建議，歡迎留言給我們，客服會以 email 回覆。</p></div>
+   <div class="layout-side"><form class="card stack" data-form="ticket" novalidate>
+    <div><label class="f">帳號（註冊 email）<em>*</em></label><input class="in" name="account" type="email" value="${esc(u?u.email:'')}"></div>
+    <div><label class="f">問題類型</label><select class="in" name="type">${['帳號問題','學生身分驗證','房源資訊錯誤','檢舉貼文','功能建議','其他'].map(c=>`<option>${c}</option>`).join('')}</select></div>
+    <div><label class="f">意見／問題 <em>*</em></label><textarea class="in" name="body" placeholder="請描述你遇到的狀況"></textarea></div>
+    <label class="chk"><input type="checkbox" name="agree"> 我已閱讀並同意 <a href="#/terms" target="_blank">服務條款及隱私聲明</a></label>
+    <div class="err" id="t-err"></div>
+    <button class="btn pri">發送</button></form>
+    <aside class="stack"><div class="card"><b>常見問題</b>
+     <details style="margin-top:8px"><summary class="small">學生身分驗證要多久？</summary><p class="small muted">通常 1～2 個工作天，請使用學校信箱並上傳學生證。</p></details>
+     <details style="margin-top:8px"><summary class="small">為什麼沒有房東電話？</summary><p class="small muted">學租圈是學生間的資訊交流平台，不刊登房東廣告。</p></details>
+     <details style="margin-top:8px"><summary class="small">我的貼文為什麼還沒出現？</summary><p class="small muted">所有貼文需經管理員審核，通過後才會公開。</p></details></div>
+     ${u?`<div class="card"><b>我的客服紀錄</b>${mine.length?mine.map(t=>`<div class="log"><div class="row between"><span>${esc(t.type)}</span>${t.status==='open'?'<span class="badge b-pending">處理中</span>':t.status==='failed'?'<span class="badge b-bad">聯繫失敗</span>':'<span class="badge b-ok">已回覆</span>'}</div><div class="small muted">${esc(t.body)}</div>${t.reply?`<div class="small" style="margin-top:4px">💬 ${esc(t.reply)}</div>`:''}</div>`).join(''):'<p class="small muted" style="margin-top:6px">尚無紀錄</p>'}</div>`:''}
+    </aside></div></div>`
+}
+function vTerms(){return `<div class="wrap" style="max-width:760px"><div class="page-head"><h1>服務條款與隱私聲明</h1></div><div class="card stack small">
+ <p><b>1. 服務對象</b>：學租圈僅供在學大學生／研究生使用，註冊後須完成學生身分驗證。</p>
+ <p><b>2. 內容規範</b>：會員分享之房源資訊與心得應為親身經驗，不得刊登廣告、留下外部聯絡方式招攬、或發表不實與攻擊性內容。</p>
+ <p><b>3. 審核與處分</b>：平台得審核、退回或刪除違規內容，並視情節給予警告、暫時停權或永久停權。</p>
+ <p><b>4. 隱私</b>：我們僅蒐集提供服務所需之姓名、電話、email 與學生證明，不會提供給第三方；看房紀錄僅本人可見。</p>
+ <p class="muted">＊本頁為課程專題示範內容。</p></div></div>`}
+
+/* =========================================================
+   會員：登入 / 註冊 / 忘記密碼 / 會員中心
+   ========================================================= */
+function demoBox(admin){return `<div class="demo">🔑 示範帳號：${admin?'<b>admin</b> / <b>admin123</b>':'<b>demo@nthu.edu.tw</b> / <b>123456</b>'}</div>`}
+function vLogin(parts,q){
+  if(cur())return setTimeout(()=>go('/me'),0),'';
+  return `<div class="wrap auth"><div class="card">
+   <h1 style="font-size:24px">會員登入</h1><p class="muted small" style="margin:4px 0 16px">歡迎回來！登入後可收藏房源、同步看房紀錄。</p>
+   <form class="stack" data-form="login" data-r="${esc(q.get('r')||'')}" novalidate>
+    <div><label class="f">帳號（email）</label><input class="in" name="email" type="email" autocomplete="username"></div>
+    <div><label class="f">密碼</label><input class="in" name="pw" type="password" autocomplete="current-password"></div>
+    <div class="err" id="login-err"></div>
+    <button class="btn pri block">登入</button>
+    <div class="row between small"><a href="#/forgot">忘記密碼？</a><span>還沒有帳號？<a href="#/register">註冊會員</a></span></div>
+   </form>${demoBox()}</div></div>`
+}
+function vRegister(){
+  return `<div class="wrap auth"><div class="card">
+   <h1 style="font-size:24px">註冊會員</h1><p class="muted small" style="margin:4px 0 16px">建立基本資料，註冊後再完成學生身分驗證。</p>
+   <form class="stack" data-form="register" novalidate>
+    <div><label class="f">姓名 <em>*</em></label><input class="in" name="name"></div>
+    <div><label class="f">電話 <em>*</em></label><input class="in" name="phone" type="tel" placeholder="09xx-xxx-xxx"></div>
+    <div><label class="f">Email（登入帳號）<em>*</em></label><input class="in" name="email" type="email"></div>
+    <div class="grid2"><div><label class="f">密碼 <em>*</em></label><input class="in" name="pw" type="password" placeholder="至少 6 碼"></div><div><label class="f">確認密碼 <em>*</em></label><input class="in" name="pw2" type="password"></div></div>
+    <label class="chk"><input type="checkbox" name="agree"> 我已閱讀並同意 <a href="#/terms" target="_blank">服務條款及隱私聲明</a></label>
+    <div class="err" id="reg-err"></div>
+    <button class="btn pri block">註冊</button>
+    <p class="small" style="text-align:center">已經有帳號？<a href="#/login">登入</a></p>
+   </form></div></div>`
+}
+let FP={step:1,email:'',code:'',admin:false};
+function vForgot(parts,q){
+  const admin=q.get('admin')==='1';if(FP.admin!==admin)FP={step:1,email:'',code:'',admin};
+  const s=FP.step;
+  return `<div class="wrap auth"><div class="card">
+   <h1 style="font-size:24px">${admin?'後台人員':''}忘記密碼</h1>
+   <div class="steps" style="margin-top:14px">${[1,2,3].map(i=>`<i class="${s>=i?'on':''}"></i>`).join('')}</div>
+   ${s===1?`<form class="stack" data-form="fp1" novalidate><p class="small muted">請輸入註冊的電子郵件，我們會寄送驗證碼。</p><div><label class="f">電子郵件</label><input class="in" name="email" type="email" value="${esc(FP.email)}"></div><div class="err" id="fp-err"></div><button class="btn pri block">寄送驗證碼</button>
+     ${admin?'<p class="small muted">無法收信？請<b>聯絡後台管理人員</b>協助重設。</p>':''}</form>`:''}
+   ${s===2?`<form class="stack" data-form="fp2" novalidate><p class="small muted">驗證碼已寄至 <b>${esc(FP.email)}</b></p><div><label class="f">輸入驗證碼</label><input class="in" name="code" inputmode="numeric" maxlength="6"></div><div class="err" id="fp-err"></div><button class="btn pri block">驗證</button><button type="button" class="btn ghost block" data-act="fp-resend">再次傳送驗證碼</button></form>`:''}
+   ${s===3?`<form class="stack" data-form="fp3" novalidate><div><label class="f">輸入新密碼</label><input class="in" name="pw" type="password"></div><div><label class="f">再次輸入新密碼</label><input class="in" name="pw2" type="password"></div><div class="err" id="fp-err"></div><button class="btn pri block">修改密碼</button></form>`:''}
+   <p class="small" style="margin-top:14px"><a href="#/${admin?'admin':'login'}" data-act="fp-reset">← 回到登入</a></p></div></div>`
+}
+function sendCode(){FP.code=String(Math.floor(100000+Math.random()*900000));modal(`<h3>📧 模擬收信</h3><p>學租圈驗證碼：<b style="font-size:22px;letter-spacing:4px">${FP.code}</b></p><p class="small muted">（原型示範：實際上線會寄到使用者信箱）</p><div class="acts"><button class="btn pri" data-act="close">知道了</button></div>`)}
+
+let meTab='profile';
+function vMe(parts,q){
+  const u=cur();if(!u){setTimeout(()=>go('/login?r=/me'),0);return ''}
+  if(q.get('tab'))meTab=q.get('tab');
+  const vb={verified:['b-ok','已驗證'],pending:['b-pending','審核中'],rejected:['b-bad','未通過，請補件'],none:['b-gray','未驗證']}[u.verify];
+  const tabs=[['profile','個人檔案'],['verify','學生身分驗證'],['needs','個人租屋需求'],['favs','收藏名單'],['notices','通知']];
+  const unread=u.notices.filter(n=>!n.read).length;
+  let body='';
+  if(meTab==='profile')body=`<form class="stack" data-form="profile"><div class="grid2"><div><label class="f">姓名</label><input class="in" name="name" value="${esc(u.name)}"></div><div><label class="f">電話</label><input class="in" name="phone" value="${esc(u.phone)}"></div></div>
+   <div><label class="f">Email（登入帳號）</label><input class="in" value="${esc(u.email)}" disabled></div>
+   <div class="row" style="justify-content:flex-end"><button class="btn pri">儲存變更</button></div></form>`;
+  if(meTab==='verify')body=`<div class="stack"><p>目前狀態：<span class="badge ${vb[0]}">${vb[1]}</span></p>
+   ${u.verify==='verified'?`<p class="muted small">已驗證學校：${esc(u.school)}（${esc(u.schoolEmail)}）</p>`:`
+   <form class="stack" data-form="verify"><div class="grid2"><div><label class="f">學校 <em>*</em></label><input class="in" name="school" value="${esc(u.school)}" placeholder="例：國立清華大學"></div><div><label class="f">學校信箱 <em>*</em></label><input class="in" name="schoolEmail" type="email" value="${esc(u.schoolEmail)}" placeholder="xxx@xxx.edu.tw"></div></div>
+   <div><label class="f">學生證照片</label><input class="in" type="file" accept="image/*" name="card"></div><div class="err" id="v-err"></div>
+   <div class="row" style="justify-content:flex-end"><button class="btn pri">${u.verify==='pending'?'重新送出':'送出驗證'}</button></div></form>`}</div>`;
+  if(meTab==='needs'){const n=u.needs;body=`<form class="stack" data-form="needs"><p class="small muted">設定後：找房會依符合程度排序、看屋須知會產生客製清單。</p>
+   <div class="grid2"><div><label class="f">每月預算上限</label><input class="in" name="budget" type="number" min="0" step="500" value="${n.budget||''}" placeholder="例：8000"></div>
+   <div><label class="f">偏好類型</label><select class="in" name="type"><option value="">不限</option>${TYPES.map(t=>`<option ${n.type===t?'selected':''}>${t}</option>`).join('')}</select></div></div>
+   <div><label class="f">偏好區域</label><div class="tag-wrap">${ZONES.map(z=>`<label class="chip"><input type="checkbox" name="zones" value="${z}" ${n.zones.includes(z)?'checked':''}> ${z}</label>`).join('')}</div></div>
+   <div><label class="f">必要條件</label><div class="tag-wrap">${TAGS.map(z=>`<label class="chip"><input type="checkbox" name="tags" value="${z}" ${n.tags.includes(z)?'checked':''}> ${z}</label>`).join('')}</div></div>
+   <div class="row" style="justify-content:flex-end"><button class="btn pri">儲存需求</button></div></form>`}
+  if(meTab==='favs')body=u.favs.length?`<div class="cards">${u.favs.map(L).filter(Boolean).map(lcard).join('')}</div>`:'<p class="muted">還沒有收藏的房源。<a href="#/">去找房 →</a></p>';
+  if(meTab==='notices')body=u.notices.length?u.notices.slice().reverse().map(n=>`<div class="log"><span class="tiny muted">${fmt(n.t)}</span> ${n.read?'':'<span class="badge b-bad">新</span>'}<div>${esc(n.msg)}</div></div>`).join(''):'<p class="muted">沒有通知</p>';
+  if(meTab==='notices'&&unread){setTimeout(()=>{u.notices.forEach(n=>n.read=true);save();renderHeader('me')},800)}
+  return `<div class="wrap" style="max-width:960px">
+   <div class="page-head row between"><div class="row"><span class="avatar" style="width:52px;height:52px;font-size:22px">${esc(u.name[0])}</span><div><h1 style="font-size:22px">${esc(u.name)}</h1><span class="badge ${vb[0]}">學生身分：${vb[1]}</span>${u.status!=='active'?` <span class="badge b-bad">帳號停權中</span>`:''}</div></div>
+    <button class="btn ghost sm" data-act="logout">登出</button></div>
+   <div class="tabs">${tabs.map(([k,t])=>`<button class="${meTab===k?'on':''}" data-act="metab" data-v="${k}">${t}${k==='notices'&&unread?` (${unread})`:''}</button>`).join('')}</div>
+   <div class="card">${body}</div>
+   <div class="grid3" style="margin-top:16px"><a class="card" href="#/records" style="text-decoration:none"><b>📝 我的看房紀錄</b><div class="small muted">${S.records.filter(r=>r.owner===u.id).length} 筆</div></a><a class="card" href="#/forum" style="text-decoration:none"><b>💬 我的貼文</b><div class="small muted">${S.posts.filter(p=>p.uid===u.id&&p.status!=='deleted').length} 篇</div></a><a class="card" href="#/support" style="text-decoration:none"><b>🎧 客服中心</b><div class="small muted">${S.tickets.filter(t=>t.account===u.email).length} 則紀錄</div></a></div>
+  </div>`
+}
+function loginAs(u){
+  S.session=u.id;
+  const g='guest';
+  let moved=0;S.records.forEach(r=>{if(r.owner===g){r.owner=u.id;moved++}});
+  if(S.checklists[g]&&S.checklists[g].length&&(!S.checklists[u.id]||!S.checklists[u.id].length))S.checklists[u.id]=S.checklists[g];delete S.checklists[g];
+  if(S.carry[g]&&S.carry[g].length){S.carry[u.id]=S.carry[g];delete S.carry[g]}
+  if(S.compare[g]){S.compare[u.id]=[...new Set([...(S.compare[u.id]||[]),...S.compare[g]])].slice(0,4);delete S.compare[g]}
+  if(S.viewed[g]){S.viewed[u.id]=[...new Set([...S.viewed[g],...(S.viewed[u.id]||[])])];delete S.viewed[g]}
+  save();return moved
+}
+
+/* =========================================================
+   後台管理系統
+   ========================================================= */
+let admQ='',admF='';
+function vAdmin(parts,q){
+  const sub=parts[1]||'';
+  if(sub==='forgot'){go('/forgot?admin=1');return ''}
+  if(!S.admin)return vAdminLogin();
+  const pendV=S.users.filter(u=>u.verify==='pending').length,pendP=S.posts.filter(p=>p.status==='pending').length,pendC=S.posts.reduce((a,p)=>a+p.comments.filter(c=>c.status==='pending').length,0),pendT=S.tickets.filter(t=>t.status==='open').length;
+  const nav=[['','📊 數據總覽',0],['members','👥 會員管理',pendV],['posts','📝 發文審核',pendP],['comments','💬 留言審核',pendC],['support','🎧 客服回覆',pendT]];
+  let content='';
+  if(sub==='')content=admDash(pendV,pendP,pendC,pendT);
+  else if(sub==='members')content=admMembers();
+  else if(sub==='member')content=admMember(parts[2]);
+  else if(sub==='posts')content=admPosts(parts[2]);
+  else if(sub==='comments')content=admComments();
+  else if(sub==='support')content=admSupport();
+  return `<div class="adm"><aside><div class="ttl tiny" style="padding:6px 12px;opacity:.6">後台管理系統</div>${nav.map(([h,t,c])=>`<a href="#/admin${h?'/'+h:''}" class="${sub===h||(sub==='member'&&h==='members')?'on':''}"><span>${t}</span>${c?`<span class="cnt">${c}</span>`:''}</a>`).join('')}</aside><div class="content">${content}</div></div>`
+}
+function vAdminLogin(){
+  return `<div class="wrap auth"><div class="card"><span class="chip blue">後台</span><h1 style="font-size:24px;margin-top:8px">後台人員登入</h1>
+   <form class="stack" data-form="admin-login" style="margin-top:14px" novalidate>
+    <div><label class="f">帳號</label><input class="in" name="id" autocomplete="username"></div>
+    <div><label class="f">密碼</label><input class="in" name="pw" type="password" autocomplete="current-password"></div>
+    <div class="err" id="al-err"></div><button class="btn dark block">登入</button>
+    <a class="small" href="#/forgot?admin=1">忘記密碼？</a></form>${demoBox(true)}</div></div>`
+}
+function admDash(v,p,c,t){
+  const users=S.users.length,ver=S.users.filter(u=>u.verify==='verified').length,pubs=S.posts.filter(x=>x.status==='published').length,recs=S.records.length;
+  const byZone=ZONES.map(z=>[z,S.listings.filter(l=>l.zone===z).length]);const mx=Math.max(...byZone.map(b=>b[1]));
+  return `<h1 style="font-size:22px;margin-bottom:14px">數據總覽</h1>
+   <div class="stat-grid">${[['會員總數',users],['已驗證學生',ver],['已發布貼文',pubs],['看房紀錄',recs],['待驗證會員',v],['待審文章',p],['待審留言',c],['待處理客服',t]].map(([a,b])=>`<div class="stat"><b>${b}</b><span>${a}</span></div>`).join('')}</div>
+   <div class="card" style="margin-top:16px"><b>各區域房源數</b>${byZone.map(([z,n])=>`<div style="margin-top:10px"><div class="row between small"><span>${z}</span><span>${n}</span></div><div class="progress"><i style="width:${n/mx*100}%;background:var(--palette-blue)"></i></div></div>`).join('')}</div>
+   <div class="card" style="margin-top:16px"><b>最近管理紀錄</b>${S.adminLogs.slice(-8).reverse().map(l=>`<div class="log"><span class="tiny muted">${fmt(l.t)}</span> ${esc(l.msg)}</div>`).join('')||'<p class="small muted">尚無紀錄</p>'}</div>`
+}
+function admLog(msg){S.adminLogs.push({t:new Date().toISOString(),msg})}
+function notify(uid,msg){const u=S.users.find(x=>x.id===uid);if(u)u.notices.push({t:new Date().toISOString(),msg,read:false})}
+function admMembers(){
+  const vt={verified:'已驗證',pending:'待審核',rejected:'未通過',none:'未驗證'};
+  const list=S.users.filter(u=>(!admQ||(u.name+u.email+u.phone).includes(admQ))&&(!admF||(admF==='suspended'?u.status!=='active':u.verify===admF)));
+  return `<h1 style="font-size:22px;margin-bottom:14px">會員管理</h1>
+   <form class="row" data-form="adm-search" style="margin-bottom:12px"><input class="in" name="q" value="${esc(admQ)}" placeholder="輸入姓名、email、電話" style="flex:1;min-width:180px">
+    <select class="in" name="f" style="width:auto"><option value="">全部狀態</option>${[['pending','待審核驗證'],['verified','已驗證'],['none','未驗證'],['rejected','驗證未通過'],['suspended','停權中']].map(([v,t])=>`<option value="${v}" ${admF===v?'selected':''}>${t}</option>`).join('')}</select><button class="btn dark">搜尋</button></form>
+   ${list.length?`<table class="tbl"><thead><tr><th>姓名</th><th>Email</th><th>學生身分</th><th>帳號狀態</th><th>違規</th></tr></thead><tbody>
+   ${list.map(u=>`<tr class="click" data-act="adm-open-member" data-id="${u.id}"><td data-l="姓名"><b>${esc(u.name)}</b></td><td data-l="Email">${esc(u.email)}</td><td data-l="學生身分"><span class="badge ${u.verify==='verified'?'b-ok':u.verify==='pending'?'b-pending':u.verify==='rejected'?'b-bad':'b-gray'}">${vt[u.verify]}</span></td><td data-l="帳號狀態">${u.status==='active'?'<span class="badge b-ok">正常</span>':u.status==='disabled'?'<span class="badge b-bad">永久停權</span>':`<span class="badge b-bad">停權至 ${fmt(u.until)}</span>`}</td><td data-l="違規">${u.violations.length?`<span class="badge b-bad">${u.violations.length} 筆</span>`:'—'}</td></tr>`).join('')}</tbody></table>`
+   :`<div class="card" style="text-align:center">找不到符合的會員，請<b>調整搜尋條件</b>。</div>`}`
+}
+function admMember(id){
+  const u=S.users.find(x=>x.id===id);if(!u)return '<p>找不到會員</p>';
+  const vt={verified:'已驗證',pending:'待審核',rejected:'未通過',none:'未驗證'};
+  return `<a href="#/admin/members" class="small muted">← 返回會員列表</a>
+   <h1 style="font-size:22px;margin:8px 0 14px">${esc(u.name)} <span class="small muted">${esc(u.email)}</span></h1>
+   <div class="grid2">
+    <div class="card stack"><b>會員詳細資料</b>
+     <div class="small">電話：${esc(u.phone)}<br>學校：${esc(u.school||'—')}<br>學校信箱：${esc(u.schoolEmail||'—')}<br>註冊日：${fmt(u.created)}<br>帳號狀態：${u.status==='active'?'正常':u.status==='disabled'?'永久停權（停用）':'暫時停權至 '+fmt(u.until)}</div>
+     <hr style="border:none;border-top:1px solid #EDEFF3">
+     <b>學生身分驗證 <span class="badge ${u.verify==='verified'?'b-ok':u.verify==='pending'?'b-pending':'b-gray'}">${vt[u.verify]}</span></b>
+     ${u.verify==='pending'?`<p class="small muted">會員已送出學校信箱與學生證，請核對。</p><div class="row"><button class="btn leaf sm" data-act="adm-verify" data-id="${u.id}" data-v="ok">驗證通過 → 更新為已驗證</button><button class="btn ghost sm" data-act="adm-verify" data-id="${u.id}" data-v="no">不通過 → 通知補交</button></div>`
+       :u.verify==='verified'?'<p class="small muted">已完成驗證。</p>':`<p class="small muted">會員尚未送出驗證資料。</p><button class="btn ghost sm" data-act="adm-verify-remind" data-id="${u.id}">發送提醒驗證通知</button>`}
+     ${u.status!=='active'?`<button class="btn ghost sm" data-act="adm-restore" data-id="${u.id}">恢復帳號正常使用</button>`:''}
+    </div>
+    <div class="card stack"><b>違規紀錄（${u.violations.length}）</b>
+     ${u.violations.map(v=>`<div class="log"><span class="badge b-bad">${esc(v.type)}</span> <span class="tiny muted">${fmt(v.t)}</span><div>${esc(v.desc)}</div></div>`).join('')||'<p class="small muted">無違規紀錄</p>'}
+     ${u.violations.length?`<hr style="border:none;border-top:1px solid #EDEFF3"><b>審核是否違規</b>
+      <form class="stack" data-form="adm-punish" data-id="${u.id}">
+       <select class="in" name="kind"><option value="none">不違規：維持帳號正常使用</option><option value="warn">違規：警告（發送警告通知）</option><option value="temp">違規：暫時停權</option><option value="perm">違規：永久停權（停用帳號）</option></select>
+       <div><label class="f">停權天數（暫時停權時）</label><input class="in" name="days" type="number" min="1" value="7"></div>
+       <div><label class="f">處分原因／備註</label><textarea class="in" name="reason" style="min-height:60px"></textarea></div>
+       <button class="btn warn">儲存管理紀錄</button></form>`:''}
+    </div></div>
+   <div class="card" style="margin-top:16px"><b>管理紀錄</b>${u.logs.slice().reverse().map(l=>`<div class="log"><span class="tiny muted">${fmt(l.t)}</span> ${esc(l.msg)}</div>`).join('')||'<p class="small muted">尚無紀錄</p>'}</div>`
+}
+function admPosts(id){
+  if(id){const p=S.posts.find(x=>x.id===id);if(!p)return '<p>找不到文章</p>';const l=L(p.listingId);
+   return `<a href="#/admin/posts" class="small muted">← 返回待審核文章</a>
+    <div class="card" style="margin-top:10px"><div class="row"><span class="chip">${p.cat}</span><span class="badge ${p.status==='pending'?'b-pending':p.status==='published'?'b-ok':'b-bad'}">${{pending:'待審核',published:'已發布',returned:'已退回',deleted:'已刪除'}[p.status]}</span></div>
+     <h2 style="margin:8px 0">${esc(p.title)}</h2><div class="small muted">作者：${esc(p.author)}・${fmt(p.created)}${l?'・相關房源：'+esc(l.title):''}</div>
+     <p style="margin-top:12px;white-space:pre-wrap">${esc(p.body)}</p></div>
+    ${p.status==='pending'?`<div class="card stack" style="margin-top:14px"><b>內容是否符合規範？</b>
+     <div class="row"><button class="btn leaf" data-act="adm-pub" data-id="${p.id}">✓ 符合規範：發布文章</button></div>
+     <div class="grid2"><form class="stack" data-form="adm-return" data-id="${p.id}"><label class="f">需修改／部分調整：輸入修改意見</label><textarea class="in" name="reason" required style="min-height:70px"></textarea><button class="btn ghost">退回撰寫者</button></form>
+     <form class="stack" data-form="adm-delpost" data-id="${p.id}"><label class="f">違規：輸入違規原因</label><textarea class="in" name="reason" required style="min-height:70px"></textarea><button class="btn warn">刪除文章</button></form></div></div>`:''}`}
+  const pend=S.posts.filter(p=>p.status==='pending');const done=S.posts.filter(p=>p.status!=='pending').slice(0,8);
+  return `<h1 style="font-size:22px;margin-bottom:14px">發文審核</h1><b class="small muted">待審核文章（${pend.length}）</b>
+   ${pend.length?`<table class="tbl" style="margin-top:8px"><thead><tr><th style="width:45%">標題</th><th>分類</th><th>作者</th><th>送出時間</th></tr></thead><tbody>${pend.map(p=>`<tr class="click" data-act="adm-open-post" data-id="${p.id}"><td data-l="標題"><b>${esc(p.title)}</b></td><td data-l="分類">${p.cat}</td><td data-l="作者">${esc(p.author)}</td><td data-l="時間">${fmt(p.created)}</td></tr>`).join('')}</tbody></table>`:'<div class="card" style="margin-top:8px">🎉 目前沒有待審核文章</div>'}
+   <b class="small muted" style="display:block;margin-top:20px">最近處理</b><table class="tbl" style="margin-top:8px"><tbody>${done.map(p=>`<tr class="click" data-act="adm-open-post" data-id="${p.id}"><td data-l="標題">${esc(p.title)}</td><td data-l="狀態"><span class="badge ${p.status==='published'?'b-ok':'b-bad'}">${{published:'已發布',returned:'已退回',deleted:'已刪除'}[p.status]}</span></td></tr>`).join('')}</tbody></table>`
+}
+function flagOf(body){return BAD_WORDS.filter(w=>body.includes(w))}
+function admComments(){
+  const items=[];S.posts.forEach(p=>p.comments.forEach(c=>{if(c.status==='pending')items.push({p,c})}));
+  return `<h1 style="font-size:22px;margin-bottom:6px">留言審核</h1><p class="small muted" style="margin-bottom:14px">系統會自動以敏感詞標記可疑留言（標記為垃圾訊息／人工審核）。</p>
+   ${items.length?items.map(({p,c})=>{const fl=flagOf(c.body);return `<div class="card stack" style="margin-bottom:12px">
+    <div class="row between"><span class="small muted">於〈${esc(p.title)}〉・${esc(c.author)}・${fmt(c.created)}</span>${fl.length?`<span class="badge b-bad">⚠ 敏感詞：${fl.join('、')}</span>`:'<span class="badge b-gray">人工審核</span>'}</div>
+    <div>${esc(c.body)}</div>
+    <form class="row" data-form="adm-cmt" data-p="${p.id}" data-c="${c.id}"><input class="in" name="reason" placeholder="違規原因（刪除時必填）" style="flex:1;min-width:160px">
+     <button type="button" class="btn leaf sm" data-act="adm-cmt-show" data-p="${p.id}" data-c="${c.id}">符合規定：顯示留言</button><button class="btn warn sm">刪除／隱藏留言</button></form></div>`}).join(''):'<div class="card">🎉 目前沒有待審核留言</div>'}`
+}
+function admSupport(){
+  return `<h1 style="font-size:22px;margin-bottom:14px">客服回覆</h1>
+   ${S.tickets.slice().reverse().map(t=>{const exists=S.users.some(u=>u.email===t.account);return `<div class="card stack" style="margin-bottom:12px">
+    <div class="row between"><span><b>${esc(t.type)}</b> <span class="small muted">${esc(t.account)}・${fmt(t.created)}</span></span>
+     ${t.status==='open'?'<span class="badge b-pending">待處理</span>':t.status==='failed'?'<span class="badge b-bad">聯繫失敗</span>':'<span class="badge b-ok">已回覆</span>'}</div>
+    <div>${esc(t.body)}</div>
+    <div class="small">帳號是否存在：${exists?'<span class="badge b-ok">存在</span>':'<span class="badge b-bad">不存在</span>'}</div>
+    ${t.status==='open'?(exists?`<form class="row" data-form="adm-reply" data-id="${t.id}"><input class="in" name="reply" placeholder="輸入回覆內容" style="flex:1;min-width:180px" required><button class="btn dark sm">進行回覆</button></form>`
+      :`<button class="btn ghost sm" data-act="adm-acct-err" data-id="${t.id}">回覆信件：表示帳號錯誤</button>`):`<div class="small muted">💬 ${esc(t.reply)}</div>`}
+   </div>`}).join('')}`
+}
+
+/* =========================================================
+   事件處理
+   ========================================================= */
+const A={
+  'modal-bg':(t,e)=>{if(e.target===t)closeModal()},
+  close:()=>closeModal(),
+  menu:()=>$('#nav').classList.toggle('open'),
+  reset:()=>{modal(`<h3>重設示範資料？</h3><p class="muted">會清除你在這台裝置上的所有操作，回到初始示範資料。</p><div class="acts"><button class="btn ghost" data-act="close">取消</button><button class="btn warn" data-act="reset-ok">重設</button></div>`)},
+  'reset-ok':()=>{S=seed();save();closeModal();toast('已重設');go('/');render()},
+  'open-listing':(t,e)=>{if(e.target.closest('[data-act=fav]'))return;go('/listing/'+t.dataset.id)},
+  fav:(t,e)=>{e.stopPropagation();const u=cur();if(!u)return needLogin(location.hash.slice(1),'登入會員後即可收藏房源，建立你的收藏名單。');
+    const id=t.dataset.id;const i=u.favs.indexOf(id);i>=0?u.favs.splice(i,1):u.favs.push(id);save();toast(i>=0?'已取消收藏':'已加入收藏名單');
+    if(parse().parts[0]==='listing'||parse().parts[0]==='me')render();else refreshResults()},
+  tagf:t=>{const x=t.dataset.t;F.tags=F.tags.includes(x)?F.tags.filter(y=>y!==x):[...F.tags,x];t.classList.toggle('on');refreshResults()},
+  view:t=>{F.view=t.dataset.v;refreshResults()},
+  'clear-filter':()=>{Object.assign(F,{q:'',zone:'',type:'',max:'',tags:[]});render()},
+  // guide
+  gtab:t=>{guideTab=t.dataset.v;render()},
+  kcat:t=>{knowCat=t.dataset.v;render()},
+  'cl-toggle':t=>{const it=getChecklist().find(i=>i.id===t.dataset.id);it.checked=t.checked;save();render()},
+  'cl-del':t=>{const o=owner();S.checklists[o]=getChecklist().filter(i=>i.id!==t.dataset.id);save();render()},
+  'cl-add':()=>clAddModal(),
+  'cl-add-ok':()=>{const n=$('#m-name').value.trim();if(!n){$('#m-err').classList.remove('hide');return}getChecklist().push({id:nid('c'),name:n,cat:$('#m-cat').value,checked:false,custom:true});save();closeModal();render();toast('已新增項目')},
+  'cl-reset':()=>{S.checklists[owner()]=buildChecklist(cur());save();render();toast('已重置客製化清單')},
+  'k-add':t=>{const k=KNOW[t.dataset.i];getChecklist().push({id:nid('c'),name:k[3],cat:k[0],checked:true});save();toast('已加入檢查清單（並自動勾選）');render()},
+  carry:()=>{const items=getChecklist().filter(i=>i.checked).map(i=>i.name);if(!items.length)return toast('請先勾選要帶入的項目');
+    if(!cur()){modal(`<h3>尚未登入會員</h3><p class="muted">登入後紀錄可雲端同步；也可以先暫存在這台裝置，稍後登入再同步。剛剛勾選的 ${items.length} 個項目都會保留。</p>
+      <div class="acts"><button class="btn ghost" data-act="carry-local">先在本機暫存</button><button class="btn pri" data-act="carry-login">登入並同步</button></div>`);return}
+    S.carry[owner()]=items;save();toast('已雲端同步，前往現場看房紀錄');go('/record/new')},
+  'carry-local':()=>{S.carry.guest=getChecklist().filter(i=>i.checked).map(i=>i.name);save();closeModal();go('/record/new')},
+  'carry-login':()=>{S.carry.guest=getChecklist().filter(i=>i.checked).map(i=>i.name);save();closeModal();go('/login?r=/record/new')},
+  // record form
+  rmode:t=>{RF.mode=t.dataset.v;t.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===t));$('#pick-box').classList.toggle('hide',RF.mode!=='pick');$('#manual-box').classList.toggle('hide',RF.mode!=='manual')},
+  star:t=>{const k=t.dataset.k,v=+t.dataset.v;if(k==='overall'){RF.overall=v;$('#ov-t').textContent=v+' / 5'}else RF.ratings[k]=v;t.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',+b.dataset.v<=v))},
+  chk:t=>{const c=RF.checks[t.dataset.i];c.v=c.v===t.dataset.v?'':t.dataset.v;$('#checks').innerHTML=checksHTML()},
+  'add-check':()=>{const i=$('#new-check');const v=i.value.trim();if(!v)return;RF.checks.push({name:v,v:''});i.value='';$('#checks').innerHTML=checksHTML()},
+  'del-check':t=>{RF.checks.splice(t.dataset.i,1);$('#checks').innerHTML=checksHTML()},
+  ptag:t=>{const g=RF[t.dataset.g],x=t.dataset.t;const i=g.indexOf(x);i>=0?g.splice(i,1):g.push(x);t.classList.toggle('on')},
+  'del-photo':t=>{RF.photos.splice(t.dataset.i,1);$('#thumbs').innerHTML=thumbsHTML()},
+  rsave:t=>saveRecord(t.dataset.v),
+  'new-again':()=>{closeModal();if(location.hash==='#/record/new')render()},
+  // records
+  rsel:t=>{const o=owner();S.compare[o]=S.compare[o]||[];const a=S.compare[o];const id=t.dataset.id;
+    if(t.checked){if(a.length>=4){t.checked=false;return toast('最多只能比較 4 筆')}a.push(id)}else S.compare[o]=a.filter(x=>x!==id);save();render()},
+  'rsel-clear':()=>{S.compare[owner()]=[];save();render()},
+  need2:(t,e)=>{e.preventDefault();toast('請選擇 2 到 4 筆紀錄才能開始比較')},
+  rview:t=>{const r=S.records.find(x=>x.id===t.dataset.id);r&&recordDetail(r)},
+  rdel:t=>{modal(`<h3>刪除這筆看房紀錄？</h3><p class="muted">刪除後無法復原。</p><div class="acts"><button class="btn ghost" data-act="close">取消</button><button class="btn warn" data-act="rdel-ok" data-id="${t.dataset.id}">刪除</button></div>`)},
+  'rdel-ok':t=>{const id=t.dataset.id;S.records=S.records.filter(r=>r.id!==id);const o=owner();S.compare[o]=(S.compare[o]||[]).filter(x=>x!==id);save();closeModal();render();toast('已刪除')},
+  // compare
+  'cmp-move':t=>{const a=S.compare[owner()];const i=+t.dataset.i,j=i+ +t.dataset.d;[a[i],a[j]]=[a[j],a[i]];save();render()},
+  'cmp-rm':t=>{const o=owner();S.compare[o]=S.compare[o].filter(x=>x!==t.dataset.id);save();render();toast('已從比較中移除')},
+  final:t=>{const o=owner();S.finalPick[o]=S.finalPick[o]===t.dataset.id?null:t.dataset.id;save();render();if(S.finalPick[o])toast('已標記為最終選擇 🎉')},
+  export:()=>modal(`<h3>匯出比較結果</h3><p class="muted small">選擇要匯出的格式：</p><div class="acts" style="justify-content:stretch"><button class="btn ghost" style="flex:1" data-act="exp-pdf">📄 儲存為 PDF</button><button class="btn ghost" style="flex:1" data-act="exp-img">🖼 儲存為圖片</button></div><p class="tiny muted" style="margin-top:10px">PDF：在列印視窗選擇「另存為 PDF」。</p>`),
+  'exp-pdf':()=>{closeModal();setTimeout(()=>window.print(),100)},
+  'exp-img':()=>{closeModal();exportImage()},
+  share:()=>modal(`<h3>分享比較結果</h3><p class="muted small">選擇分享對象：</p><div class="stack" style="margin-top:10px">
+    <button class="btn ghost block" data-act="sh-copy">📋 複製摘要（傳給室友／家人）</button>
+    ${navigator.share?'<button class="btn ghost block" data-act="sh-native">📱 使用手機分享</button>':''}
+    <button class="btn ghost block" data-act="sh-forum">💬 帶到交流版發文，詢問大家意見</button></div><div class="acts"><button class="btn ghost" data-act="close">取消</button></div>`),
+  'sh-copy':()=>{const txt=compareSummary();(navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast('已複製到剪貼簿')).catch(()=>{modal(`<h3>請手動複製</h3><textarea class="in" style="min-height:200px">${esc(txt)}</textarea><div class="acts"><button class="btn pri" data-act="close">完成</button></div>`)});closeModal()},
+  'sh-native':()=>{navigator.share({title:'學租圈 看房比較',text:compareSummary()}).catch(()=>{});closeModal()},
+  'sh-forum':()=>{if(!cur()){closeModal();return needLogin('/compare','發文需要登入會員')}S.postDraft=compareSummary()+'\n\n大家覺得哪一間比較好呢？';save();closeModal();go('/forum?new=1')},
+  'cmp-end':()=>modal(`<h3>結束比較？</h3><p class="muted">比較清單會被清空，看房紀錄不會刪除。</p><div class="acts"><button class="btn ghost" data-act="close">繼續比較</button><button class="btn dark" data-act="cmp-end-ok">結束比較</button></div>`),
+  'cmp-end-ok':()=>{S.compare[owner()]=[];save();closeModal();go('/records');toast('已結束比較')},
+  // forum
+  fcat:t=>{forumCat=t.dataset.v;render()},
+  fclear:()=>{forumQ='';render()},
+  'forum-new':()=>{if(!cur())return needLogin('/forum?new=1','分享貼文需要登入會員。');go('/forum?new=1')},
+  'forum-back':()=>go('/forum'),
+  'open-post':t=>go('/post/'+t.dataset.id),
+  like:t=>{const p=S.posts.find(x=>x.id===t.dataset.id);p.likes++;save();render()},
+  'post-preview':()=>{const f=document.querySelector('form[data-form=post]');const l=L(f.listingId.value);
+    $('#preview').innerHTML=`<label class="f" style="margin-top:6px">預覽</label><div class="preview-box"><span class="chip">${esc(f.cat.value)}</span>${l?` <span class="chip leaf">🏠 ${esc(l.road)}</span>`:''}<h3 style="margin:8px 0">${esc(f.title.value)||'（尚未輸入標題）'}</h3><p style="white-space:pre-wrap">${esc(f.body.value)||'（尚未輸入內容）'}</p><div class="small muted">${esc(cur().name)}・剛剛</div></div>`},
+  // me
+  metab:t=>{meTab=t.dataset.v;location.hash==='#/me'?render():go('/me')},
+  logout:()=>{S.session=null;save();toast('已登出');go('/')},
+  'fp-resend':()=>{sendCode();toast('已重新傳送驗證碼')},
+  'fp-reset':()=>{FP={step:1,email:'',code:'',admin:false}},
+  // admin
+  'admin-logout':()=>{S.admin=false;save();go('/admin')},
+  'adm-open-member':t=>go('/admin/member/'+t.dataset.id),
+  'adm-open-post':t=>go('/admin/posts/'+t.dataset.id),
+  'adm-verify':t=>{const u=S.users.find(x=>x.id===t.dataset.id);
+    if(t.dataset.v==='ok'){u.verify='verified';notify(u.id,'你的學生身分驗證已通過！現在可以使用所有會員功能。');u.logs.push({t:new Date().toISOString(),msg:'學生身分驗證通過'});admLog(`${u.name}：學生身分驗證通過`);save();render();toast('已更新為已驗證')}
+    else modal(`<h3>驗證不通過</h3><label class="f">通知會員補交的原因</label><textarea class="in" id="m-reason">學生證照片模糊，請重新上傳清楚的照片。</textarea><div class="acts"><button class="btn ghost" data-act="close">取消</button><button class="btn warn" data-act="adm-verify-no" data-id="${u.id}">送出通知</button></div>`)},
+  'adm-verify-no':t=>{const u=S.users.find(x=>x.id===t.dataset.id);const r=$('#m-reason').value.trim();u.verify='rejected';notify(u.id,'學生身分驗證未通過，請補交或重新驗證：'+r);u.logs.push({t:new Date().toISOString(),msg:'驗證未通過，通知補交：'+r});admLog(`${u.name}：驗證未通過，已通知補交`);save();closeModal();render();toast('已通知會員補交或重新驗證')},
+  'adm-verify-remind':t=>{const u=S.users.find(x=>x.id===t.dataset.id);notify(u.id,'提醒您完成學生身分驗證，以使用完整會員功能。');u.logs.push({t:new Date().toISOString(),msg:'發送驗證提醒'});save();render();toast('已發送提醒')},
+  'adm-restore':t=>{const u=S.users.find(x=>x.id===t.dataset.id);u.status='active';u.until=null;notify(u.id,'你的帳號已恢復正常使用。');u.logs.push({t:new Date().toISOString(),msg:'恢復帳號正常使用'});admLog(`${u.name}：恢復帳號`);save();render();toast('已恢復帳號')},
+  'adm-pub':t=>{const p=S.posts.find(x=>x.id===t.dataset.id);p.status='published';p.created=new Date().toISOString();notify(p.uid,`你的貼文〈${p.title}〉已通過審核並公開。`);admLog(`發布文章〈${p.title}〉`);save();toast('文章已發布');go('/admin/posts')},
+  'adm-cmt-show':t=>{const p=S.posts.find(x=>x.id===t.dataset.p);const c=p.comments.find(x=>x.id===t.dataset.c);c.status='shown';admLog(`顯示留言（${c.author}）`);save();render();toast('留言已顯示')},
+  'adm-acct-err':t=>{const tk=S.tickets.find(x=>x.id===t.dataset.id);tk.status='failed';tk.reply='您輸入的帳號不存在，請確認帳號後重新聯繫客服。';admLog(`客服：${tk.account} 帳號不存在，聯繫失敗`);save();render();toast('已回覆帳號錯誤')},
+};
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-act]');if(!t)return;
+  const a=t.dataset.act;if(A[a]){if(t.tagName==='BUTTON'&&t.type!=='submit'&&!t.closest('form'))e.preventDefault();A[a](t,e)}
+  if(t.closest('nav.main'))$('#nav').classList.remove('open');
+});
+document.addEventListener('click',e=>{if(e.target.closest('nav.main a'))$('#nav').classList.remove('open')});
+document.addEventListener('input',e=>{const f=e.target.dataset.f;if(f==='q'){F.q=e.target.value.trim();refreshResults()}});
+document.addEventListener('change',e=>{const f=e.target.dataset.f;if(f&&f!=='q'){F[f]=e.target.value;refreshResults()}});
+
+const FORMS={
+  search:()=>{refreshResults();$('#results').scrollIntoView({behavior:'smooth'})},
+  login:f=>{const em=f.email.value.trim().toLowerCase(),pw=f.pw.value,err=$('#login-err');
+    if(!em||!pw){err.textContent='請輸入帳號與密碼';return}
+    const u=S.users.find(x=>x.email.toLowerCase()===em);
+    if(!u){err.innerHTML='此帳號尚未註冊。<a href="#/register">前往註冊 →</a>';return}
+    if(u.pw!==pw){err.innerHTML='密碼不正確，請重新輸入。<a href="#/forgot">忘記密碼？</a>';f.pw.value='';f.pw.focus();return}
+    if(u.status==='disabled'){err.textContent='此帳號已被停用，如有疑問請聯絡客服中心。';return}
+    if(u.status==='suspended'){if(new Date(u.until)>new Date()){err.textContent=`此帳號暫時停權至 ${fmt(u.until)}。`;return}u.status='active'}
+    const moved=loginAs(u);toast(`登入成功，歡迎 ${u.name}！${moved?`已同步 ${moved} 筆本機紀錄`:''}`);go(f.dataset.r||'/')},
+  register:f=>{const err=$('#reg-err');const v=k=>f[k].value.trim();
+    if(!v('name')||!v('phone')||!v('email')||!f.pw.value){err.textContent='請填寫所有必填欄位';return}
+    if(!/^\S+@\S+\.\S+$/.test(v('email'))){err.textContent='Email 格式不正確';return}
+    if(S.users.some(u=>u.email.toLowerCase()===v('email').toLowerCase())){err.innerHTML='此 Email 已註冊過，<a href="#/login">直接登入</a>';return}
+    if(f.pw.value.length<6){err.textContent='密碼至少 6 碼';return}
+    if(f.pw.value!==f.pw2.value){err.textContent='兩次輸入的密碼不一致';return}
+    if(!f.agree.checked){err.textContent='請勾選同意服務條款及隱私聲明';return}
+    const u={id:nid('U'),name:v('name'),phone:v('phone'),email:v('email'),pw:f.pw.value,school:'',schoolEmail:'',verify:'none',status:'active',created:new Date().toISOString(),needs:{budget:0,zones:[],type:'',tags:[]},favs:[],notices:[{t:new Date().toISOString(),msg:'註冊成功！請完成學生身分驗證以使用完整功能。',read:false}],violations:[],logs:[]};
+    S.users.push(u);loginAs(u);toast('註冊成功！下一步：學生身分驗證');meTab='verify';go('/me?tab=verify')},
+  fp1:f=>{const em=f.email.value.trim().toLowerCase();const ok=FP.admin?S.admins.some(a=>a.email===em):S.users.some(u=>u.email.toLowerCase()===em);
+    if(!ok){$('#fp-err').textContent=FP.admin?'查無此後台帳號信箱，請聯絡後台管理人員':'此電子郵件尚未註冊';return}FP.email=em;FP.step=2;render();sendCode()},
+  fp2:f=>{if(f.code.value.trim()!==FP.code){$('#fp-err').textContent='驗證碼不正確，驗證失敗。請重新輸入或再次傳送驗證碼。';return}FP.step=3;render()},
+  fp3:f=>{const e=$('#fp-err');if(f.pw.value.length<6){e.textContent='密碼至少 6 碼';return}
+    if(f.pw.value!==f.pw2.value){e.textContent='修改密碼失敗：兩筆密碼不一致，請重新輸入。';return}
+    if(FP.admin){S.admins.find(a=>a.email===FP.email).pw=f.pw.value}else{S.users.find(u=>u.email.toLowerCase()===FP.email).pw=f.pw.value}
+    save();const ad=FP.admin;FP={step:1,email:'',code:'',admin:false};toast('成功修改密碼，請用新密碼登入');go(ad?'/admin':'/login')},
+  profile:f=>{const u=cur();u.name=f.name.value.trim()||u.name;u.phone=f.phone.value.trim();save();toast('已儲存個人檔案');render()},
+  verify:f=>{const u=cur();const s=f.school.value.trim(),em=f.schoolEmail.value.trim();
+    if(!s||!em){$('#v-err').textContent='請填寫學校與學校信箱';return}if(!/\.edu(\.tw)?$/i.test(em)){$('#v-err').textContent='請使用學校信箱（.edu.tw 結尾）';return}
+    u.school=s;u.schoolEmail=em;u.verify='pending';save();toast('已送出驗證，等待後台審核');render()},
+  needs:f=>{const u=cur();u.needs={budget:Number(f.budget.value)||0,type:f.type.value,zones:[...f.querySelectorAll('[name=zones]:checked')].map(i=>i.value),tags:[...f.querySelectorAll('[name=tags]:checked')].map(i=>i.value)};
+    S.checklists[u.id]=buildChecklist(u);save();toast('已儲存，看屋須知已更新為客製清單');render()},
+  'forum-search':f=>{forumQ=f.q.value.trim();render()},
+  post:f=>{const u=cur();const title=f.title.value.trim(),body=f.body.value.trim();
+    if(!title||!body){$('#post-err').textContent='請輸入標題與內容';return}
+    const id=f.dataset.id;
+    if(id){const p=S.posts.find(x=>x.id===id);Object.assign(p,{title,body,cat:f.cat.value,listingId:f.listingId.value,status:'pending',reason:''})}
+    else S.posts.unshift({id:nid('P'),uid:u.id,author:u.name,title,body,cat:f.cat.value,listingId:f.listingId.value,status:'pending',created:new Date().toISOString(),likes:0,comments:[]});
+    save();
+    nextModal=(`<h3>✓ 貼文已送出</h3><p class="muted">貼文將由管理員審核，通過後會公開顯示並通知你；若需修改，會退回給你並附上意見。</p><div class="acts"><button class="btn pri" data-act="close">好的</button></div>`);go('/forum')},
+  comment:f=>{const u=cur();if(!u)return needLogin(location.hash.slice(1),'留言需要登入會員。');const b=f.body.value.trim();if(!b)return;
+    const p=S.posts.find(x=>x.id===f.dataset.id);p.comments.push({id:nid('C'),uid:u.id,author:u.name,body:b,status:'pending',created:new Date().toISOString()});save();toast('留言已送出，審核通過後顯示');render()},
+  ticket:f=>{const e=$('#t-err');if(!f.account.value.trim()||!f.body.value.trim()){e.textContent='請填寫帳號與問題內容';return}if(!f.agree.checked){e.textContent='請勾選已同意服務條款及隱私聲明';return}
+    S.tickets.push({id:nid('T'),account:f.account.value.trim(),type:f.type.value,body:f.body.value.trim(),created:new Date().toISOString(),status:'open',reply:''});save();
+    nextModal=`<h3>✓ 已送出</h3><p class="muted">客服會確認帳號後，以 email 回覆你。</p><div class="acts"><button class="btn pri" data-act="close">好的</button></div>`;render()},
+  'admin-login':f=>{const a=S.admins.find(x=>x.id===f.id.value.trim());const e=$('#al-err');
+    if(!a){e.textContent='帳號不存在，請重新輸入';return}if(a.pw!==f.pw.value){e.innerHTML='密碼錯誤，請重新輸入。<a href="#/forgot?admin=1">忘記密碼？</a>';return}
+    S.admin=true;save();toast('成功登入後台管理系統');render()},
+  'adm-search':f=>{admQ=f.q.value.trim();admF=f.f.value;render()},
+  'adm-punish':f=>{const u=S.users.find(x=>x.id===f.dataset.id);const k=f.kind.value,r=f.reason.value.trim(),now=new Date().toISOString();let msg='';
+    if(k==='none'){msg='審核不違規，維持帳號正常使用'}
+    if(k==='warn'){msg='警告：'+r;notify(u.id,'⚠ 警告通知：'+(r||'您的行為違反社群規範，請注意。'))}
+    if(k==='temp'){const d=Math.max(1,+f.days.value||7);u.status='suspended';u.until=new Date(Date.now()+d*864e5).toISOString();msg=`暫時停權 ${d} 天：${r}`;notify(u.id,`你的帳號已被暫時停權 ${d} 天。原因：${r||'違反社群規範'}`)}
+    if(k==='perm'){u.status='disabled';msg='永久停權（停用帳號）：'+r;notify(u.id,'你的帳號已被永久停權。')}
+    u.logs.push({t:now,msg});admLog(`${u.name}：${msg}`);save();toast('已儲存管理紀錄');go('/admin/members')},
+  'adm-return':f=>{const p=S.posts.find(x=>x.id===f.dataset.id);p.status='returned';p.reason=f.reason.value.trim();notify(p.uid,`你的貼文〈${p.title}〉需要修改：${p.reason}`);admLog(`退回文章〈${p.title}〉`);save();toast('文章已退回並通知撰寫者');go('/admin/posts')},
+  'adm-delpost':f=>{const p=S.posts.find(x=>x.id===f.dataset.id);p.status='deleted';p.reason=f.reason.value.trim();notify(p.uid,`你的貼文〈${p.title}〉因違規已被刪除：${p.reason}`);admLog(`刪除文章〈${p.title}〉：${p.reason}`);save();toast('文章已刪除');go('/admin/posts')},
+  'adm-cmt':f=>{const r=f.reason.value.trim();if(!r){toast('請輸入違規原因');f.reason.focus();return}const p=S.posts.find(x=>x.id===f.dataset.p);const c=p.comments.find(x=>x.id===f.dataset.c);c.status='hidden';c.reason=r;notify(c.uid,`你在〈${p.title}〉的留言因違規已被刪除：${r}`);admLog(`刪除留言（${c.author}）：${r}`);save();toast('留言已刪除並通知撰寫者');render()},
+  'adm-reply':f=>{const t=S.tickets.find(x=>x.id===f.dataset.id);t.reply=f.reply.value.trim();t.status='replied';const u=S.users.find(x=>x.email===t.account);if(u)notify(u.id,`客服回覆：${t.reply}`);admLog(`客服回覆 ${t.account}`);save();toast('已回覆');render()},
+};
+document.addEventListener('submit',e=>{const f=e.target;const k=f.dataset.form;if(k&&FORMS[k]){e.preventDefault();FORMS[k](f)}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();if(e.key==='Enter'&&e.target.id==='new-check'){e.preventDefault();A['add-check']()}if(e.key==='Enter'&&e.target.id==='m-name'){e.preventDefault();A['cl-add-ok']()}});
+
+render();
+</script>
+</body>
+</html>
